@@ -341,8 +341,8 @@ mysqli_close($conn);
                     <span class="d-none d-sm-inline">Profile</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                    <li><a class="dropdown-item" href="profile.php">My Profile</a></li>
-                    <li><a class="dropdown-item" href="edit_profile.php">Edit Profile</a></li>
+                    <li><a class="dropdown-item" href="admin_profile.php">My Profile</a></li>
+                    <!--li><a class="dropdown-item" href="edit_profile.php">Edit Profile</a></li-->
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="logout.php">Logout</a></li>
                 </ul>
