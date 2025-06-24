@@ -129,9 +129,9 @@ $isAdmin = (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin')
             <?php if ($isAdmin): ?>
                 <a href="admin_manage_menu.php" class="text-white text-decoration-none fw-medium position-relative">Manage
                     Menu</a>
-                <a href="#" class="text-white text-decoration-none fw-medium position-relative">Sales Report</a>
-                <a href="#" class="text-white text-decoration-none fw-medium position-relative">Manage User</a>
-                <a href="#" class="text-white text-decoration-none fw-medium position-relative">Feedback</a>
+                <a href="admin_sales_report.php" class="text-white text-decoration-none fw-medium position-relative">Sales Report</a>
+                <a href="admin_manage_user.php" class="text-white text-decoration-none fw-medium position-relative">Manage User</a>
+                <a href="admin_feedback.php" class="text-white text-decoration-none fw-medium position-relative">Feedback</a>
             <?php else: ?>
                 <a href="menu.php" class="text-white text-decoration-none fw-medium position-relative">Menu</a>
                 <a href="order.php" class="text-white text-decoration-none fw-medium position-relative">Order</a>
@@ -190,12 +190,12 @@ $isAdmin = (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin')
                                     <div class="col-12 col-md-6">
                                         <a href="admin_manage_menu.php" class="btn btn-secondary w-100 py-3 mb-2">Manage
                                             Menu</a>
-                                        <a href="#" class="btn btn-secondary w-100 py-3 mb-2">View Sales Report</a>
+                                        <a href="admin_sales_report.php" class="btn btn-secondary w-100 py-3 mb-2">View Sales Report</a>
                                         <!--a href="#" class="btn btn-secondary w-100 py-3 mb-2">Manage User</a-->
                                     </div>
                                     <div class="col-12 col-md-6">
-                                        <a href="#" class="btn btn-secondary w-100 py-3 mb-2">View Feedback</a>
-                                        <a href="profile.php" class="btn btn-secondary w-100 py-3 mb-2">Manage User</a>
+                                        <a href="admin_feedback.php" class="btn btn-secondary w-100 py-3 mb-2">View Feedback</a>
+                                        <a href="admin_manage_user.php" class="btn btn-secondary w-100 py-3 mb-2">Manage User</a>
                                     </div>
                                 </div>
                             </div>

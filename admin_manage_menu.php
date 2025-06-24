@@ -204,7 +204,6 @@ mysqli_close($conn);
             background-color: #f8f9fa;
         }
 
-        /* Header styles */
         header {
             height: 70px;
         }
@@ -330,10 +329,10 @@ mysqli_close($conn);
         <div class="text-white fs-4 fw-bold">CC Food Ordering System</div>
         <nav class="d-flex align-items-center gap-3 gap-lg-5">
             <a href="mainPage.php" class="text-white text-decoration-none fw-medium position-relative">Home</a>
-            <a href="manage_menu.php" class="text-white text-decoration-none fw-medium position-relative">Manage Menu</a>
-            <a href="#" class="text-white text-decoration-none fw-medium position-relative">Sales Report</a>
-            <a href="#" class="text-white text-decoration-none fw-medium position-relative">Manage User</a>
-            <a href="#" class="text-white text-decoration-none fw-medium position-relative">Feedback</a>
+            <a href="admin_manage_menu.php" class="text-white text-decoration-none fw-medium position-relative">Manage Menu</a>
+            <a href="admin_sales_report.php" class="text-white text-decoration-none fw-medium position-relative">Sales Report</a>
+            <a href="admin_manage_user.php" class="text-white text-decoration-none fw-medium position-relative">Manage User</a>
+            <a href="admin_feedback.php" class="text-white text-decoration-none fw-medium position-relative">Feedback</a>
             <div class="dropdown">
                 <a href="#" class="header-link text-white text-decoration-none fw-medium d-flex align-items-center gap-2 dropdown-toggle"
                    id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">

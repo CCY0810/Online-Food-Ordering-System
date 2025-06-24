@@ -124,9 +124,9 @@ $profileImage = htmlspecialchars($user['profileImage']);
             <nav class="d-flex align-items-center gap-3 gap-lg-5">
                 <a href="mainPage.php" class="text-white text-decoration-none fw-medium position-relative">Home</a>
                     <a href="admin_manage_menu.php" class="text-white text-decoration-none fw-medium position-relative">Manage Menu</a>
-                    <a href="#" class="text-white text-decoration-none fw-medium position-relative">Sales Report</a>
-                    <a href="#" class="text-white text-decoration-none fw-medium position-relative">Manage User</a>
-                    <a href="#" class="text-white text-decoration-none fw-medium position-relative">Feedback</a>
+                    <a href="admin_sales_report.php" class="text-white text-decoration-none fw-medium position-relative">Sales Report</a>
+                    <a href="admin_manage_user.php" class="text-white text-decoration-none fw-medium position-relative">Manage User</a>
+                    <a href="admin_feedback.php" class="text-white text-decoration-none fw-medium position-relative">Feedback</a>
                     
                 <div class="d-flex align-items-center gap-4 ms-3">
                     <div class="dropdown">
@@ -136,7 +136,7 @@ $profileImage = htmlspecialchars($user['profileImage']);
                         <span class="d-none d-sm-inline">Profile</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                        <li><a class="dropdown-item" href="profile.php">My Profile</a></li>
+                        <li><a class="dropdown-item" href="admin_profile.php">My Profile</a></li>
                         <!--li><a class="dropdown-item" href="edit_profile.php">Edit Profile</a></li-->
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="logout.php">Logout</a></li>
