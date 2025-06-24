@@ -124,7 +124,7 @@ $profileImage = htmlspecialchars($user['profileImage']);
             <nav class="d-flex align-items-center gap-3 gap-lg-5">
                 <a href="mainPage.php" class="text-white text-decoration-none fw-medium position-relative">Home</a>
                 <a href="menu.php" class="text-white text-decoration-none fw-medium position-relative">Menu</a>
-                <a href="order.php" class="text-white text-decoration-none fw-medium position-relative">Order</a>
+                <a href="redirect_orders.php" class="text-white text-decoration-none fw-medium position-relative">Order</a>
                 <div class="d-flex align-items-center gap-4 ms-3">
                     <a href="cart.php" class="header-link text-white text-decoration-none fw-medium d-flex align-items-center gap-2">
                         <img src="assets/cart1.png" alt="Shopping Cart" class="img-fluid" style="width: 24px; height: 24px;">

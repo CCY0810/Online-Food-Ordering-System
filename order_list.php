@@ -1,24 +1,27 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['user_id'])) {
+if(!isset($_SESSION['user_id'])) {
     header("Location: login.php");
+    exit();
+}
+
+if($_SESSION['user_role'] != 'admin' && $_SESSION['user_role'] != 'staff') {
+    header("Location: oder.php");
     exit();
 }
 
 require_once("config.php");
 
-// Fetch orders from database
-$userID = $_SESSION['user_id'];
 $orders = [];
 
-// Get orders for current user
-$orderQuery = "SELECT orderID, orderTime, orderStatus, total, paymentMethod 
-               FROM Orders 
-               WHERE userID = ?
-               ORDER BY orderTime DESC";
+// Get all orders (no filter by user)
+$orderQuery = "SELECT o.orderID, o.orderTime, o.orderStatus, o.total, o.paymentMethod, u.userID 
+               FROM Orders o
+               JOIN User u ON o.userID = u.userID
+               ORDER BY o.orderTime DESC";
+
 $stmt = $conn->prepare($orderQuery);
-$stmt->bind_param("s", $userID);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -43,14 +46,15 @@ while ($orderRow = $result->fetch_assoc()) {
         }
         $items[] = $itemName;
     }
-    
-    // Format order ID for display
+
+    // Format order ID
     $displayOrderID = 'ORD-' . date('Y', strtotime($orderRow['orderTime'])) . '-' . str_pad($orderID, 4, '0', STR_PAD_LEFT);
     
     // Build order array
     $orders[] = [
         'orderID' => $displayOrderID,
         'dbOrderID' => $orderID,
+        'userID' => $orderRow['userID'], 
         'orderTime' => $orderRow['orderTime'],
         'orderStatus' => $orderRow['orderStatus'],
         'paymentMethod' => $orderRow['paymentMethod'],
@@ -65,15 +69,15 @@ $conn->close();
 
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Order</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="order.css">
-</head>
-<body class="d-flex flex-column min-vh-100 bg-light">
-    <!-- Header -->
+    <head>
+        <title>Order List</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="order.css">
+    </head>
+    <body class="d-flex flex-column min-vh-100 bg-light">
+        <!-- Header -->
     <header class="container-fluid bg-dark fixed-top shadow-sm d-flex justify-content-between align-items-center px-4" style="height: 70px;">
         <div class="text-white fs-4 fw-bold">CC Food Ordering System</div>
         <nav class="d-flex align-items-center gap-3 gap-lg-5">
@@ -114,6 +118,7 @@ $conn->close();
                                 <div>
                                     <strong>Order ID:</strong> <?= htmlspecialchars($order['orderID']) ?>
                                     <span class="ms-3"><strong>Order Time:</strong> <?= date('M j, Y g:i A', strtotime($order['orderTime'])) ?></span>
+                                    <span class="ms-3"><strong>User ID:</strong> <?= htmlspecialchars($order['userID']) ?></span>
                                 </div>
                                 <div>
                                     <?php 
@@ -174,11 +179,20 @@ $conn->close();
                                         data-db-order-id="<?= htmlspecialchars($order['dbOrderID']) ?>">
                                     <i class="fas fa-info-circle me-1"></i> Order Details
                                 </button>
-                                <?php if($order['orderStatus'] === 'Completed'): ?>
-                                    <button class="btn-feedback" data-bs-toggle="modal" data-bs-target="#feedbackModal" 
+                                <?php if($order['orderStatus'] === 'Pending'): ?>
+                                    <button class="btn-reject" 
+                                            data-order-id="<?= htmlspecialchars($order['orderID']) ?>">
+                                        <i class="fas fa-times-circle me-1"></i> Reject
+                                    </button>
+                                    <button class="btn-accept"  
+                                            data-order-id="<?= htmlspecialchars($order['orderID']) ?>">
+                                        <i class="fas fa-check-circle me-1"></i> Accept
+                                    </button>
+                                <?php else: ?>
+                                    <button class="btn-update" data-bs-toggle="modal" data-bs-target="#updateModel" 
                                             data-order-id="<?= htmlspecialchars($order['orderID']) ?>"
                                             data-db-order-id="<?= htmlspecialchars($order['dbOrderID']) ?>">
-                                        <i class="fas fa-star me-1"></i> Rate Order
+                                        <i class="fas fa-arrow-alt-circle-up"></i> Update Status
                                     </button>
                                 <?php endif; ?>
                             </div>
@@ -188,10 +202,7 @@ $conn->close();
                     <div class="empty-state">
                         <i class="fas fa-clipboard-list"></i>
                         <h3>No Orders Found</h3>
-                        <p>You haven't placed any orders yet. Start your culinary journey now!</p>
-                        <a href="menu.php" class="btn btn-primary btn-lg px-4 py-2">
-                            Browse Menu
-                        </a>
+                        <p>There are no orders yet</p>
                     </div>
                 <?php endif; ?>
             </div>
@@ -236,6 +247,19 @@ $conn->close();
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Update Modal -->
+    <div class="modal fade" id="updateModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Status</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
             </div>
         </div>
     </div>
@@ -389,6 +413,10 @@ document.getElementById('ratingForm').addEventListener('submit', function(e) {
         alert('An error occurred');
     });
 });
+
+
+
+
     </script>
 </body>
 </html>
