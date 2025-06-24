@@ -9,6 +9,7 @@ require_once("config.php");
 
 $foodItems = [];
 $beverageItems = [];
+$filterItems = [];
 
 $sql = "SELECT * FROM Menu WHERE category='food'";
 $result = mysqli_query($conn, $sql);
@@ -24,6 +25,17 @@ if ($result && mysqli_num_rows($result) > 0) {
     while ($row = mysqli_fetch_assoc($result)) {
         $beverageItems[] = $row;
     }
+}
+
+if (isset($_GET['search']) && !empty($_GET['search'])) {
+    $searchTerm = mysqli_real_escape_string($conn, $_GET['search']);
+    $sql = "SELECT * FROM Menu WHERE itemName LIKE '%$searchTerm%'";
+    $result = mysqli_query($conn, $sql);
+    if ($result && mysqli_num_rows($result) > 0) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $filterItems[] = $row;
+        }
+    } 
 }
 
 mysqli_close($conn);
@@ -316,7 +328,7 @@ $imageMap = [
             <nav class="d-flex align-items-center gap-3 gap-lg-5">
                 <a href="mainPage.php" class="text-white text-decoration-none fw-medium position-relative">Home</a>
                 <a href="menu.php" class="text-white text-decoration-none fw-medium position-relative">Menu</a>
-                <a href="order.php" class="text-white text-decoration-none fw-medium position-relative">Order</a>
+                <a href="redirect_orders.php" class="text-white text-decoration-none fw-medium position-relative">Order</a>
                 <div class="d-flex align-items-center gap-4 ms-3">
                     <a href="cart.php" class="header-link text-white text-decoration-none fw-medium d-flex align-items-center gap-2">
                         <img src="assets/cart1.png" alt="Shopping Cart" class="img-fluid" style="width: 24px; height: 24px;">
@@ -342,7 +354,10 @@ $imageMap = [
             <div class="MenuIntro-content">
                 <h1 class="display-4 mb-4">Discover Our Menu</h1>
                 <div class="search-section w-100 mx-auto" style="max-width: 600px;">
-                    <input type="text" class="search-bar form-control border-0 mb-3" placeholder="Search for food or beverages...">
+                    <form action="" method="GET" class="d-flex justify-content-center align-items-center">
+                        <input type="text" name="search" class="search-bar form-control border-0 m-3" value="<?php if(isset($_GET['search'])){echo $_GET['search'];} ?>" placeholder="Search for food or beverages..." >
+                        <button class="category-btn m-3" type="reset" onclick="resetSearch()">Reset</button>
+                    </form>
                     <div class="category-buttons d-flex justify-content-center gap-3">
                         <button class="category-btn active" onclick="scrollToSection('food')">Food</button>
                         <button class="category-btn" onclick="scrollToSection('beverage')">Beverages</button>
@@ -351,57 +366,90 @@ $imageMap = [
             </div>
         </div>
 
-        <!-- Food Menu Section -->
-        <div class="menu-category py-5" id="food">
-            <div class="container">
-                <h2 class="category-title text-center">Food</h2>
-                <div class="row menu-items-row">
-                    <?php foreach ($foodItems as $item): ?>
-                    <div class="col-12 col-md-6 col-lg-4 menu-item-col">
-                        <a href="menu_detail.php?itemID=<?= $item['itemID'] ?>" class="menu-item-link">
-                            <div class="menu-item w-100">
-                                <div class="item-image-container">
-                                    <img src="assets/<?= $imageMap[$item['itemName']] ?>" 
-                                         alt="<?= $item['itemName'] ?>" 
-                                         class="item-image">
-                                </div>
-                                <div class="item-details">
-                                    <h3 class="item-name"><?= $item['itemName'] ?></h3>
-                                    <p class="item-price">RM<?= number_format($item['itemPrice'], 2) ?></p>
-                                </div>
+        <?php 
+            if (isset($_GET['search']) && !empty($_GET['search'])) {
+                ?>
+                <div class="menu-category py-5" id="filter">
+                    <div class="container">
+                        <h2 class="category-title text-center">Search</h2>
+                        <div class="row menu-items-row">
+                            <?php foreach ($filterItems as $item): ?>
+                            <div class="col-12 col-md-6 col-lg-4 menu-item-col">
+                                <a href="menu_detail.php?itemID=<?= $item['itemID'] ?>" class="menu-item-link">
+                                    <div class="menu-item w-100">
+                                        <div class="item-image-container">
+                                            <img src="assets/<?= $imageMap[$item['itemName']] ?>" 
+                                                alt="<?= $item['itemName'] ?>" 
+                                                class="item-image">
+                                        </div>
+                                        <div class="item-details">
+                                            <h3 class="item-name"><?= $item['itemName'] ?></h3>
+                                            <p class="item-price">RM<?= number_format($item['itemPrice'], 2) ?></p>
+                                        </div>
+                                    </div>
+                                </a>
                             </div>
-                        </a>
+                            <?php endforeach; ?>
+                        </div>
                     </div>
-                    <?php endforeach; ?>
                 </div>
-            </div>
-        </div>
+                <?php
+            } else {
+                ?>
+                <!-- Food Menu Section -->
+                <div class="menu-category py-5" id="food">
+                    <div class="container">
+                        <h2 class="category-title text-center">Food</h2>
+                        <div class="row menu-items-row">
+                            <?php foreach ($foodItems as $item): ?>
+                            <div class="col-12 col-md-6 col-lg-4 menu-item-col">
+                                <a href="menu_detail.php?itemID=<?= $item['itemID'] ?>" class="menu-item-link">
+                                    <div class="menu-item w-100">
+                                        <div class="item-image-container">
+                                            <img src="assets/<?= $imageMap[$item['itemName']] ?>" 
+                                                alt="<?= $item['itemName'] ?>" 
+                                                class="item-image">
+                                        </div>
+                                        <div class="item-details">
+                                            <h3 class="item-name"><?= $item['itemName'] ?></h3>
+                                            <p class="item-price">RM<?= number_format($item['itemPrice'], 2) ?></p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
 
-        <!-- Beverages Menu Section -->
-        <div class="menu-category py-5 bg-light" id="beverage">
-            <div class="container">
-                <h2 class="category-title text-center">Beverages</h2>
-                <div class="row menu-items-row">
-                    <?php foreach ($beverageItems as $item): ?>
-                    <div class="col-12 col-md-6 col-lg-4 menu-item-col">
-                        <a href="menu_detail.php?itemID=<?= $item['itemID'] ?>" class="menu-item-link">
-                            <div class="menu-item w-100">
-                                <div class="item-image-container">
-                                    <img src="assets/<?= $imageMap[$item['itemName']] ?>" 
-                                         alt="<?= $item['itemName'] ?>" 
-                                         class="item-image">
-                                </div>
-                                <div class="item-details">
-                                    <h3 class="item-name"><?= $item['itemName'] ?></h3>
-                                    <p class="item-price">RM<?= number_format($item['itemPrice'], 2) ?></p>
-                                </div>
+                <!-- Beverages Menu Section -->
+                <div class="menu-category py-5 bg-light" id="beverage">
+                    <div class="container">
+                        <h2 class="category-title text-center">Beverages</h2>
+                        <div class="row menu-items-row">
+                            <?php foreach ($beverageItems as $item): ?>
+                            <div class="col-12 col-md-6 col-lg-4 menu-item-col">
+                                <a href="menu_detail.php?itemID=<?= $item['itemID'] ?>" class="menu-item-link">
+                                    <div class="menu-item w-100">
+                                        <div class="item-image-container">
+                                            <img src="assets/<?= $imageMap[$item['itemName']] ?>" 
+                                                alt="<?= $item['itemName'] ?>" 
+                                                class="item-image">
+                                        </div>
+                                        <div class="item-details">
+                                            <h3 class="item-name"><?= $item['itemName'] ?></h3>
+                                            <p class="item-price">RM<?= number_format($item['itemPrice'], 2) ?></p>
+                                        </div>
+                                    </div>
+                                </a>
                             </div>
-                        </a>
+                            <?php endforeach; ?>
+                        </div>
                     </div>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-        </div>
+                </div>  
+                <?php 
+            } 
+        ?>
 
         <footer class="bg-dark text-white py-3 text-center mt-auto">
             <script src="script/footer.js" type="text/javascript"></script>
@@ -416,6 +464,13 @@ $imageMap = [
                     // Smooth scroll to section
                     section.scrollIntoView({ behavior: 'smooth' });
                 }
+            }
+
+            function resetSearch() {
+                // Reset the search input and reload the page
+                const searchInput = document.querySelector('input[name="search"]');
+                searchInput.value = '';
+                window.location.href = 'menu.php';
             }
         </script>
     </body>
