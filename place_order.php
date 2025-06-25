@@ -37,7 +37,7 @@ try {
     }
 
     // Step 2: Insert into Orders table
-    $orderStatus = 'Preparing'; // initial status
+    $orderStatus = 'Pending'; // initial status
     $insertOrder = "INSERT INTO Orders (userID, orderStatus, total, paymentMethod)
                     VALUES ('$userID', '$orderStatus', $grandTotal, '$paymentMethod')";
     

@@ -134,6 +134,7 @@ $isAdmin = (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin')
                 <a href="admin_feedback.php" class="text-white text-decoration-none fw-medium position-relative">Feedback</a>
             <?php else: ?>
                 <a href="menu.php" class="text-white text-decoration-none fw-medium position-relative">Menu</a>
+
                 <a href="order.php" class="text-white text-decoration-none fw-medium position-relative">Order</a>
             <?php endif; ?>
             <div class="d-flex align-items-center gap-4 ms-3">
@@ -142,6 +143,12 @@ $isAdmin = (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin')
                         class="header-link text-white text-decoration-none fw-medium d-flex align-items-center gap-2">
                         <img src="assets/cart1.png" alt="Shopping Cart" class="img-fluid"
                             style="width: 24px; height: 24px;">
+
+                <a href="redirect_orders.php" class="text-white text-decoration-none fw-medium position-relative">Order</a>
+                <div class="d-flex align-items-center gap-4 ms-3">
+                    <a href="cart.php" class="header-link text-white text-decoration-none fw-medium d-flex align-items-center gap-2">
+                        <img src="assets/cart1.png" alt="Shopping Cart" class="img-fluid" style="width: 24px; height: 24px;">
+
                         <span class="d-none d-sm-inline">CART</span>
                     </a>
                 <?php endif; ?>
