@@ -196,133 +196,10 @@ mysqli_close($conn);
     <title>Admin - Category Management</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        body {
-            padding-top: 70px;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: #f8f9fa;
-        }
-
-        header {
-            height: 70px;
-        }
-
-        nav > a {
-            position: relative;
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        nav > a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: white;
-            transition: width 0.3s ease;
-        }
-
-        nav > a:hover::after {
-            width: 100%;
-        }
-
-        .header-link {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .header-link img {
-            transition: transform 0.3s ease;
-        }
-
-        .header-link:hover img {
-            transform: scale(1.2);
-        }
-
-        /* Main content styles */
-        .admin-container {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-        }
-
-        .admin-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 10px 10px 0 0;
-        }
-
-        .category-card {
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .category-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .menu-item-card {
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            transition: transform 0.2s;
-        }
-
-        .menu-item-card:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-action {
-            padding: 5px 10px;
-            font-size: 0.875rem;
-            border-radius: 4px;
-        }
-
-        .category-stats {
-            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-
-        .stats-card {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .stats-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #667eea;
-        }
-
-        .modal-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .table-hover tbody tr:hover {
-            background-color: #f8f9fa;
-        }
-
-        .badge-category {
-            font-size: 0.75rem;
-            padding: 5px 10px;
-        }
-    </style>
 </head>
+
 <body>
     <!-- Header -->
     <header class="container-fluid bg-dark fixed-top shadow-sm d-flex justify-content-between align-items-center px-4" style="height: 70px;">
@@ -483,7 +360,7 @@ mysqli_close($conn);
                         <span class="badge bg-secondary badge-category"><?= count($items) ?> item<?= count($items) !== 1 ? 's' : '' ?></span>
                     </div>
                     
-                    <div class="table-responsive">
+                    <div class="table-responsive" >
                         <table class="table table-hover">
                             <thead class="table-light">
                                 <tr>

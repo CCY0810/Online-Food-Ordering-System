@@ -161,145 +161,8 @@ while ($row = $statsResult->fetch_assoc()) {
     <title>User Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
-            padding-top: 70px;
-        }
-
-        .main-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 2rem 0;
-            margin-bottom: 2rem;
-            border-radius: 10px 10px 0 0;
-        }
-
-        .stats-card {
-            background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .stats-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .stat-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .stat-admin {
-            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
-        }
-
-        .stat-staff {
-            background: linear-gradient(45deg, #4834d4, #686de0);
-        }
-
-        .stat-customer {
-            background: linear-gradient(45deg, #00d2d3, #54a0ff);
-        }
-
-        .stat-total {
-            background: linear-gradient(45deg, #5f27cd, #341f97);
-        }
-
-        .controls-section {
-            background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .table-container {
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .table thead th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .table thead th:hover {
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-        }
-
-        .badge {
-            font-size: 0.8rem;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-        }
-
-        .badge-admin {
-            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
-        }
-
-        .badge-staff {
-            background: linear-gradient(45deg, #4834d4, #686de0);
-        }
-
-        .badge-customer {
-            background: linear-gradient(45deg, #00d2d3, #54a0ff);
-        }
-
-        .modal-content {
-            border-radius: 15px;
-            border: none;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .modal-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 15px 15px 0 0;
-        }
-
-        .btn {
-            border-radius: 8px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .action-btn {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 2px;
-        }
-    </style>
 </head>
 
 <body>
@@ -336,20 +199,18 @@ while ($row = $statsResult->fetch_assoc()) {
         </nav>
     </header>
 
-    <div class="container">
+    <div class="container my-4">
         <div class="admin-container">
-            <div class="p-4">
-                <div class="main-header">
-                    <div class="text-center">
-                        <h1 class="display-5 mb-2"><i class="fas fa-users-cog me-3"></i>User Management System</h1>
-                        <p class="lead mb-0">Admin Panel - Manage Users Efficiently</p>
-                    </div>
+            <div class="admin-header">
+                <div class="text-center">
+                    <h1 class="display-5 mb-2"><i class="fas fa-users-cog me-3"></i>User Management System</h1>
+                    <p class="lead mb-0">Admin Panel - Manage Users Efficiently</p>
                 </div>
             </div>
         </div>
 
 
-        <div class="container-fluid px-4">
+        <div class="container-fluid my-4">
             <!-- Alert Messages -->
             <?php if (!empty($message)): ?>
                 <div class="alert alert-<?php echo $messageType === 'success' ? 'success' : 'danger'; ?> alert-dismissible fade show"
@@ -403,112 +264,110 @@ while ($row = $statsResult->fetch_assoc()) {
             </div>
 
             <!-- Controls Section -->
-            <div class="admin-container mb-4">
-                <div class="controls-section">
-                    <div class="row align-items-center mb-4 ">
-                        <div class="col-md-6">
-                            <div class="d-flex gap-2 flex-wrap">
-                                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addModal">
-                                    <i class="fas fa-plus me-2"></i>Add New User
-                                </button>
-                                <button class="btn btn-danger" onclick="bulkDelete()">
-                                    <i class="fas fa-trash me-2"></i>Delete Selected
-                                </button>
-                                <button class="btn btn-info" onclick="location.reload()">
-                                    <i class="fas fa-sync-alt me-2"></i>Refresh
-                                </button>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <form method="GET" class="d-flex gap-2 justify-content-md-end">
-                                <div class="input-group" style="max-width: 300px;">
-                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
-                                    <input type="text" class="form-control" name="search" placeholder="Search users..."
-                                        value="<?php echo htmlspecialchars($search); ?>">
-                                </div>
-                                <select name="role_filter" class="form-select" style="max-width: 150px;">
-                                    <option value="">All Roles</option>
-                                    <option value="admin" <?php echo $roleFilter === 'admin' ? 'selected' : ''; ?>>Admin
-                                    </option>
-                                    <option value="staff" <?php echo $roleFilter === 'staff' ? 'selected' : ''; ?>>Staff
-                                    </option>
-                                    <option value="customer" <?php echo $roleFilter === 'customer' ? 'selected' : ''; ?>>
-                                        Customer
-                                    </option>
-                                </select>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-filter"></i>
-                                </button>
-                                <a href="?" class="btn btn-outline-secondary">
-                                    <i class="fas fa-times"></i>
-                                </a>
-                            </form>
+            <div class="controls-section">
+                <div class="row align-items-center mb-4 ">
+                    <div class="col-md-6">
+                        <div class="d-flex gap-2 flex-wrap">
+                            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addModal">
+                                <i class="fas fa-plus me-2"></i>Add New User
+                            </button>
+                            <button class="btn btn-danger" onclick="bulkDelete()">
+                                <i class="fas fa-trash me-2"></i>Delete Selected
+                            </button>
+                            <button class="btn btn-info" onclick="location.reload()">
+                                <i class="fas fa-sync-alt me-2"></i>Refresh
+                            </button>
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <form method="GET" class="d-flex gap-2 justify-content-md-end">
+                            <div class="input-group" style="max-width: 300px;">
+                                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                <input type="text" class="form-control" name="search" placeholder="Search users..."
+                                    value="<?php echo htmlspecialchars($search); ?>">
+                            </div>
+                            <select name="role_filter" class="form-select" style="max-width: 150px;">
+                                <option value="">All Roles</option>
+                                <option value="admin" <?php echo $roleFilter === 'admin' ? 'selected' : ''; ?>>Admin
+                                </option>
+                                <option value="staff" <?php echo $roleFilter === 'staff' ? 'selected' : ''; ?>>Staff
+                                </option>
+                                <option value="customer" <?php echo $roleFilter === 'customer' ? 'selected' : ''; ?>>
+                                    Customer
+                                </option>
+                            </select>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-filter"></i>
+                            </button>
+                            <a href="?" class="btn btn-outline-secondary">
+                                <i class="fas fa-times"></i>
+                            </a>
+                        </form>
+                    </div>
+                </div>
 
-                    <!-- Users Table -->
-                    <!--div class="admin-container"-->
-                    <div class="table-container ">
-                        <div class="table-responsive ">
-                            <table class="table table-hover mb-0">
-                                <thead>
-                                    <tr>
-                                        <th><input type="checkbox" class="form-check-input" id="selectAll"
-                                                onchange="toggleSelectAll()"></th>
-                                        <th onclick="sortTable('userID')" class="user-select-none">
-                                            <i class="fas fa-id-card me-2"></i>User ID <i class="fas fa-sort"></i>
-                                        </th>
-                                        <th onclick="sortTable('role')" class="user-select-none">
-                                            <i class="fas fa-user-tag me-2"></i>Role <i class="fas fa-sort"></i>
-                                        </th>
-                                        <th onclick="sortTable('name')" class="user-select-none">
-                                            <i class="fas fa-user me-2"></i>Name <i class="fas fa-sort"></i>
-                                        </th>
-                                        <th onclick="sortTable('age')" class="user-select-none">
-                                            <i class="fas fa-birthday-cake me-2"></i>Age <i class="fas fa-sort"></i>
-                                        </th>
-                                        <th onclick="sortTable('email')" class="user-select-none">
-                                            <i class="fas fa-envelope me-2"></i>Email <i class="fas fa-sort"></i>
-                                        </th>
-                                        <th onclick="sortTable('contactNumber')" class="user-select-none">
-                                            <i class="fas fa-phone me-2"></i>Contact <i class="fas fa-sort"></i>
-                                        </th>
-                                        <th onclick="sortTable('address')" class="user-select-none">
-                                            <i class="fas fa-map-marker-alt me-2"></i>Address <i
-                                                class="fas fa-sort"></i>
-                                        </th>
-                                        <th class="text-center">
-                                            <i class="fas fa-cogs me-2"></i>Actions
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if ($result->num_rows > 0): ?>
-                                        <?php while ($row = $result->fetch_assoc()): ?>
-                                            <tr>
-                                                <td><input type="checkbox" class="form-check-input userCheckbox"
-                                                        value="<?php echo $row['userID']; ?>"></td>
-                                                <td><strong><?php echo htmlspecialchars($row['userID']); ?></strong></td>
-                                                <td><span
-                                                        class="badge badge-<?php echo $row['role']; ?> text-white"><?php echo ucfirst($row['role']); ?></span>
-                                                </td>
-                                                <td><?php echo htmlspecialchars($row['name']); ?></td>
-                                                <td><?php echo $row['age']; ?> years</td>
-                                                <td><a href="mailto:<?php echo $row['email']; ?>"
-                                                        class="text-decoration-none"><?php echo htmlspecialchars($row['email']); ?></a>
-                                                </td>
-                                                <td><a href="tel:<?php echo $row['contactNumber']; ?>"
-                                                        class="text-decoration-none"><?php echo htmlspecialchars($row['contactNumber']); ?></a>
-                                                </td>
-                                                <td><small><?php echo htmlspecialchars($row['address']); ?></small></td>
-                                                <td class="text-center">
-                                                    <!-- <button class="btn btn-warning btn-sm action-btn"
+                <!-- Users Table -->
+                <!--div class="admin-container"-->
+                <div class="table-container ">
+                    <div class="table-responsive ">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" class="form-check-input" id="selectAll"
+                                            onchange="toggleSelectAll()"></th>
+                                    <th onclick="sortTable('userID')" class="user-select-none">
+                                        <i class="fas fa-id-card me-2"></i>User ID <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th onclick="sortTable('role')" class="user-select-none">
+                                        <i class="fas fa-user-tag me-2"></i>Role <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th onclick="sortTable('name')" class="user-select-none">
+                                        <i class="fas fa-user me-2"></i>Name <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th onclick="sortTable('age')" class="user-select-none">
+                                        <i class="fas fa-birthday-cake me-2"></i>Age <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th onclick="sortTable('email')" class="user-select-none">
+                                        <i class="fas fa-envelope me-2"></i>Email <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th onclick="sortTable('contactNumber')" class="user-select-none">
+                                        <i class="fas fa-phone me-2"></i>Contact <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th onclick="sortTable('address')" class="user-select-none">
+                                        <i class="fas fa-map-marker-alt me-2"></i>Address <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th class="text-center">
+                                        <i class="fas fa-cogs me-2"></i>Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if ($result->num_rows > 0): ?>
+                                    <?php while ($row = $result->fetch_assoc()): ?>
+                                        <tr>
+                                            <td><input type="checkbox" class="form-check-input userCheckbox"
+                                                    value="<?php echo $row['userID']; ?>"></td>
+                                            <td><strong><?php echo htmlspecialchars($row['userID']); ?></strong></td>
+                                            <td><span
+                                                    class="badge badge-<?php echo $row['role']; ?> text-white"><?php echo ucfirst($row['role']); ?></span>
+                                            </td>
+                                            <td><?php echo htmlspecialchars($row['name']); ?></td>
+                                            <td><?php echo $row['age']; ?> years</td>
+                                            <td><a href="mailto:<?php echo $row['email']; ?>"
+                                                    class="text-decoration-none"><?php echo htmlspecialchars($row['email']); ?></a>
+                                            </td>
+                                            <td><a href="tel:<?php echo $row['contactNumber']; ?>"
+                                                    class="text-decoration-none"><?php echo htmlspecialchars($row['contactNumber']); ?></a>
+                                            </td>
+                                            <td><small><?php echo htmlspecialchars($row['address']); ?></small></td>
+                                            <td class="text-center">
+                                                <!-- <button class="btn btn-warning btn-sm action-btn"
                                     onclick="editUser('<?//php echo $row['userID']; ?>')" title="Edit User">
                                     <i class="fas fa-edit"></i>
                                 </button> -->
-                                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                                        data-bs-target="#editModal"
-                                                        onclick="editUser(
+                                                <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                                                    data-bs-target="#editModal"
+                                                    onclick="editUser(
                                                         '<?php echo htmlspecialchars($row['userID'], ENT_QUOTES); ?>',
                                                         '<?php echo htmlspecialchars($row['role'], ENT_QUOTES); ?>',
                                                         '<?php echo htmlspecialchars($row['name'], ENT_QUOTES); ?>',
@@ -516,303 +375,291 @@ while ($row = $statsResult->fetch_assoc()) {
                                                         '<?php echo htmlspecialchars($row['email'], ENT_QUOTES); ?>',
                                                         '<?php echo htmlspecialchars($row['contactNumber'], ENT_QUOTES); ?>',
                                                         '<?php echo htmlspecialchars($row['address'], ENT_QUOTES); ?>')">
-                                                        <i class="fas fa-edit"></i> Edit
-                                                    </button>
-                                                    <button class="btn btn-danger btn-sm action-btn"
-                                                        onclick="deleteUser('<?php echo $row['userID']; ?>')"
-                                                        title="Delete User">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        <?php endwhile; ?>
-                                    <?php else: ?>
-                                        <tr>
-                                            <td colspan="9" class="text-center py-4">
-                                                <i class="fas fa-users fa-3x text-muted mb-3"></i>
-                                                <h5 class="text-muted">No users found</h5>
-                                                <small class="text-muted">Try adjusting your search criteria</small>
+                                                    <i class="fas fa-edit"></i> Edit
+                                                </button>
+                                                <button class="btn btn-danger btn-sm action-btn"
+                                                    onclick="deleteUser('<?php echo $row['userID']; ?>')" title="Delete User">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
                                             </td>
                                         </tr>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-
-                </div>
-
-                <!-- Add User Modal -->
-                <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="addModalLabel">
-                                    <i class="fas fa-user-plus me-2"></i>Add New User
-                                </h5>
-                                <button type="button" class="btn-close btn-close-white"
-                                    data-bs-dismiss="modal"></button>
-                            </div>
-                            <form method="POST">
-                                <div class="modal-body">
-                                    <input type="hidden" name="action" value="add">
-
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label"><i class="fas fa-id-card me-2"></i>User
-                                                    ID</label>
-                                                <input type="text" class="form-control" name="userID" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label"><i
-                                                        class="fas fa-user-tag me-2"></i>Role</label>
-                                                <select class="form-select" name="role" required>
-                                                    <option value="">Select Role</option>
-                                                    <option value="customer">Customer</option>
-                                                    <option value="staff">Staff</option>
-                                                    <option value="admin">Admin</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-8">
-                                            <div class="mb-3">
-                                                <label class="form-label"><i class="fas fa-user me-2"></i>Full
-                                                    Name</label>
-                                                <input type="text" class="form-control" name="name" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="mb-3">
-                                                <label class="form-label"><i
-                                                        class="fas fa-birthday-cake me-2"></i>Age</label>
-                                                <input type="number" class="form-control" name="age" min="1" max="150"
-                                                    required>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label"><i class="fas fa-envelope me-2"></i>Email
-                                            Address</label>
-                                        <input type="email" class="form-control" name="email" required>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label"><i class="fas fa-phone me-2"></i>Contact
-                                            Number</label>
-                                        <input type="text" class="form-control" name="contactNumber" required>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label"><i
-                                                class="fas fa-map-marker-alt me-2"></i>Address</label>
-                                        <textarea class="form-control" name="address" rows="3" required></textarea>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                        <i class="fas fa-times me-2"></i>Cancel
-                                    </button>
-                                    <button type="submit" class="btn btn-success">
-                                        <i class="fas fa-save me-2"></i>Add User
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+                                    <?php endwhile; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="9" class="text-center py-4">
+                                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                                            <h5 class="text-muted">No users found</h5>
+                                            <small class="text-muted">Try adjusting your search criteria</small>
+                                        </td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
+            </div>
+        </div>
 
-                <!-- Edit User Modal -->
-                <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="editModalLabel">
-                                    <i class="fas fa-user-edit me-2"></i>Edit User
-                                </h5>
-                                <button type="button" class="btn-close btn-close-white"
-                                    data-bs-dismiss="modal"></button>
-                            </div>
-                            <form method="POST" id="editForm">
-                                <div class="modal-body">
-                                    <input type="hidden" name="action" value="update">
-                                    <input type="hidden" name="userID" id="editUserID">
-
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label"><i class="fas fa-id-card me-2"></i>User
-                                                    ID</label>
-                                                <input type="text" class="form-control" id="editUserIDDisplay" disabled>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label"><i
-                                                        class="fas fa-user-tag me-2"></i>Role</label>
-                                                <select class="form-select" name="role" id="editRole" required>
-                                                    <option value="">Select Role</option>
-                                                    <option value="customer">Customer</option>
-                                                    <option value="staff">Staff</option>
-                                                    <option value="admin">Admin</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-8">
-                                            <div class="mb-3">
-                                                <label class="form-label"><i class="fas fa-user me-2"></i>Full
-                                                    Name</label>
-                                                <input type="text" class="form-control" name="name" id="editName"
-                                                    required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="mb-3">
-                                                <label class="form-label"><i
-                                                        class="fas fa-birthday-cake me-2"></i>Age</label>
-                                                <input type="number" class="form-control" name="age" id="editAge"
-                                                    min="1" max="150" required>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label"><i class="fas fa-envelope me-2"></i>Email
-                                            Address</label>
-                                        <input type="email" class="form-control" name="email" id="editEmail" required>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label"><i class="fas fa-phone me-2"></i>Contact
-                                            Number</label>
-                                        <input type="text" class="form-control" name="contactNumber"
-                                            id="editContactNumber" required>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label"><i
-                                                class="fas fa-map-marker-alt me-2"></i>Address</label>
-                                        <textarea class="form-control" name="address" id="editAddress" rows="3"
-                                            required></textarea>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                        <i class="fas fa-times me-2"></i>Cancel
-                                    </button>
-                                    <button type="submit" class="btn btn-warning">
-                                        <i class="fas fa-save me-2"></i>Update User
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+        <!-- Add User Modal -->
+        <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addModalLabel">
+                            <i class="fas fa-user-plus me-2"></i>Add New User
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
+                    <form method="POST">
+                        <div class="modal-body">
+                            <input type="hidden" name="action" value="add">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label"><i class="fas fa-id-card me-2"></i>User
+                                            ID</label>
+                                        <input type="text" class="form-control" name="userID" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label"><i class="fas fa-user-tag me-2"></i>Role</label>
+                                        <select class="form-select" name="role" required>
+                                            <option value="">Select Role</option>
+                                            <option value="customer">Customer</option>
+                                            <option value="staff">Staff</option>
+                                            <option value="admin">Admin</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="mb-3">
+                                        <label class="form-label"><i class="fas fa-user me-2"></i>Full
+                                            Name</label>
+                                        <input type="text" class="form-control" name="name" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label"><i class="fas fa-birthday-cake me-2"></i>Age</label>
+                                        <input type="number" class="form-control" name="age" min="1" max="150" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label"><i class="fas fa-envelope me-2"></i>Email
+                                    Address</label>
+                                <input type="email" class="form-control" name="email" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label"><i class="fas fa-phone me-2"></i>Contact
+                                    Number</label>
+                                <input type="text" class="form-control" name="contactNumber" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label"><i class="fas fa-map-marker-alt me-2"></i>Address</label>
+                                <textarea class="form-control" name="address" rows="3" required></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </button>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save me-2"></i>Add User
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
+        </div>
 
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-            <script>
-                // Select all functionality
-                function toggleSelectAll() {
-                    const selectAll = document.getElementById('selectAll');
-                    const checkboxes = document.getElementsByClassName('userCheckbox');
 
-                    for (let i = 0; i < checkboxes.length; i++) {
-                        checkboxes[i].checked = selectAll.checked;
-                    }
+        <!-- Edit User Modal -->
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">
+                            <i class="fas fa-user-edit me-2"></i>Edit User
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form method="POST" id="editForm">
+                        <div class="modal-body">
+                            <input type="hidden" name="action" value="update">
+                            <input type="hidden" name="userID" id="editUserID">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label"><i class="fas fa-id-card me-2"></i>User
+                                            ID</label>
+                                        <input type="text" class="form-control" id="editUserIDDisplay" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label"><i class="fas fa-user-tag me-2"></i>Role</label>
+                                        <select class="form-select" name="role" id="editRole" required>
+                                            <option value="">Select Role</option>
+                                            <option value="customer">Customer</option>
+                                            <option value="staff">Staff</option>
+                                            <option value="admin">Admin</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="mb-3">
+                                        <label class="form-label"><i class="fas fa-user me-2"></i>Full
+                                            Name</label>
+                                        <input type="text" class="form-control" name="name" id="editName" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label"><i class="fas fa-birthday-cake me-2"></i>Age</label>
+                                        <input type="number" class="form-control" name="age" id="editAge" min="1"
+                                            max="150" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label"><i class="fas fa-envelope me-2"></i>Email
+                                    Address</label>
+                                <input type="email" class="form-control" name="email" id="editEmail" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label"><i class="fas fa-phone me-2"></i>Contact
+                                    Number</label>
+                                <input type="text" class="form-control" name="contactNumber" id="editContactNumber"
+                                    required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label"><i class="fas fa-map-marker-alt me-2"></i>Address</label>
+                                <textarea class="form-control" name="address" id="editAddress" rows="3"
+                                    required></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </button>
+                            <button type="submit" class="btn btn-warning">
+                                <i class="fas fa-save me-2"></i>Update User
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Select all functionality
+        function toggleSelectAll() {
+            const selectAll = document.getElementById('selectAll');
+            const checkboxes = document.getElementsByClassName('userCheckbox');
+
+            for (let i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = selectAll.checked;
+            }
+        }
+
+
+        // Bulk delete
+        function bulkDelete() {
+            const checkboxes = document.getElementsByClassName('userCheckbox');
+            const selected = [];
+
+            for (let i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].checked) {
+                    selected.push(checkboxes[i].value);
                 }
+            }
 
+            if (selected.length === 0) {
+                alert('Please select users to delete');
+                return;
+            }
 
-                // Bulk delete
-                function bulkDelete() {
-                    const checkboxes = document.getElementsByClassName('userCheckbox');
-                    const selected = [];
+            if (confirm(`Are you sure you want to delete ${selected.length} user(s)?`)) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.innerHTML = '<input type="hidden" name="action" value="bulk_delete">';
 
-                    for (let i = 0; i < checkboxes.length; i++) {
-                        if (checkboxes[i].checked) {
-                            selected.push(checkboxes[i].value);
-                        }
-                    }
+                selected.forEach(userID => {
+                    form.innerHTML += `<input type="hidden" name="selected_users[]" value="${userID}">`;
+                });
 
-                    if (selected.length === 0) {
-                        alert('Please select users to delete');
-                        return;
-                    }
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
 
-                    if (confirm(`Are you sure you want to delete ${selected.length} user(s)?`)) {
-                        const form = document.createElement('form');
-                        form.method = 'POST';
-                        form.innerHTML = '<input type="hidden" name="action" value="bulk_delete">';
-
-                        selected.forEach(userID => {
-                            form.innerHTML += `<input type="hidden" name="selected_users[]" value="${userID}">`;
-                        });
-
-                        document.body.appendChild(form);
-                        form.submit();
-                    }
-                }
-
-                // Delete single user
-                function deleteUser(userID) {
-                    if (confirm('Are you sure you want to delete this user?')) {
-                        const form = document.createElement('form');
-                        form.method = 'POST';
-                        form.innerHTML = `
+        // Delete single user
+        function deleteUser(userID) {
+            if (confirm('Are you sure you want to delete this user?')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.innerHTML = `
                     <input type="hidden" name="action" value="delete">
                     <input type="hidden" name="userID" value="${userID}">
                 `;
-                        document.body.appendChild(form);
-                        form.submit();
-                    }
-                }
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
 
 
-                // Edit user
-                function editUser(userID, role, name, age, email, contactNumber, address) {
-                    document.getElementById('editUserID').value = userID;
-                    document.getElementById('editUserIDDisplay').value = userID;
-                    document.getElementById('editRole').value = role;
-                    document.getElementById('editName').value = name;
-                    document.getElementById('editAge').value = age;
-                    document.getElementById('editEmail').value = email;
-                    document.getElementById('editContactNumber').value = contactNumber;
-                    document.getElementById('editAddress').value = address;
-                }
+        // Edit user
+        function editUser(userID, role, name, age, email, contactNumber, address) {
+            document.getElementById('editUserID').value = userID;
+            document.getElementById('editUserIDDisplay').value = userID;
+            document.getElementById('editRole').value = role;
+            document.getElementById('editName').value = name;
+            document.getElementById('editAge').value = age;
+            document.getElementById('editEmail').value = email;
+            document.getElementById('editContactNumber').value = contactNumber;
+            document.getElementById('editAddress').value = address;
+        }
 
-                // Sort table
-                function sortTable(column) {
-                    const url = new URL(window.location);
-                    const currentSort = url.searchParams.get('sort');
-                    const currentOrder = url.searchParams.get('order');
+        // Sort table
+        function sortTable(column) {
+            const url = new URL(window.location);
+            const currentSort = url.searchParams.get('sort');
+            const currentOrder = url.searchParams.get('order');
 
-                    let newOrder = 'ASC';
-                    if (currentSort === column && currentOrder === 'ASC') {
-                        newOrder = 'DESC';
-                    }
+            let newOrder = 'ASC';
+            if (currentSort === column && currentOrder === 'ASC') {
+                newOrder = 'DESC';
+            }
 
-                    url.searchParams.set('sort', column);
-                    url.searchParams.set('order', newOrder);
-                    window.location.href = url.toString();
-                }
+            url.searchParams.set('sort', column);
+            url.searchParams.set('order', newOrder);
+            window.location.href = url.toString();
+        }
 
-                <?php if ($editUser): ?>
-                    // Auto-open edit modal if edit parameter is present
-                    editUser('<?php echo $editUser['userID']; ?>');
-                <?php endif; ?>
-            </script>
+        <?php if ($editUser): ?>
+            // Auto-open edit modal if edit parameter is present
+            editUser('<?php echo $editUser['userID']; ?>');
+        <?php endif; ?>
+    </script>
 </body>
 
 </html>
