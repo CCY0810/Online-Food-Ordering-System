@@ -1,8 +1,13 @@
 <?php
 session_start();
+<<<<<<< Updated upstream
 require_once "config.php"; // your DB connection script
 
 // Allow only admin/staff (userlevel 1 or 2)
+=======
+require_once ("config.php"); 
+
+>>>>>>> Stashed changes
 if($_SESSION['user_role'] != 'admin' && $_SESSION['user_role'] != 'staff') {
     header("Location: oder.php");
     exit();
