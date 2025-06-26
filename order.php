@@ -134,7 +134,7 @@ $conn->close();
                                         case 'Accepted':
                                             $statusClass = 'status-accepted';
                                             break;
-                                        case 'In Preparation':
+                                        case 'Preparing':
                                             $statusClass = 'status-inpreparation';
                                             break;
                                     }

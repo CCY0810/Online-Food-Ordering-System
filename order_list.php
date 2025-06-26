@@ -15,6 +15,7 @@ require_once("config.php");
 
 $orders = [];
 
+<<<<<<< Updated upstream
 // Get all orders (no filter by user)
 $orderQuery = "SELECT o.orderID, o.orderTime, o.orderStatus, o.total, o.paymentMethod, u.userID 
                FROM Orders o
@@ -25,6 +26,37 @@ $stmt = $conn->prepare($orderQuery);
 $stmt->execute();
 $result = $stmt->get_result();
 
+=======
+// Get selected status from GET 
+$statusFilter = isset($_GET['status']) ? $_GET['status'] : '';
+
+$orderQuery = "SELECT orderID, userID, orderTime, orderStatus, total, paymentMethod 
+               FROM Orders";
+
+$params = [];
+$types = '';
+
+// Add WHERE clause if status is filtered
+if (!empty($statusFilter)) {
+    $orderQuery .= " WHERE orderStatus = ?";
+    $params[] = $statusFilter;
+    $types .= 's';
+}
+
+$orderQuery .= " ORDER BY orderTime DESC";
+
+$stmt = $conn->prepare($orderQuery);
+
+// Bind parameter if needed
+if (!empty($params)) {
+    $stmt->bind_param($types, ...$params);
+}
+
+$stmt->execute();
+$result = $stmt->get_result();
+
+
+>>>>>>> Stashed changes
 while ($orderRow = $result->fetch_assoc()) {
     $orderID = $orderRow['orderID'];
     
@@ -109,6 +141,24 @@ $conn->close();
     <main class="flex-grow-1 py-4">
         <div class="order-container">
             <h2 class="page-title">Your Order Status</h2>
+<<<<<<< Updated upstream
+=======
+            <form method="GET" class="mb-4">
+                <div class="d-flex align-items-center">
+                    <label for="statusFilter" class="me-2 fw-bold text-dark">Filter by Status:</label>
+                    <select name="status" id="statusFilter" class="form-select w-auto" onchange="this.form.submit()">
+                        <option value="">All</option>
+                        <option value="Pending" <?= $_GET['status'] == 'Pending' ? 'selected' : '' ?>>Pending</option>
+                        <option value="Accepted" <?= $_GET['status'] == 'Accepted' ? 'selected' : '' ?>>Accepted</option>
+                        <option value="Preparing" <?= $_GET['status'] == 'Preparing' ? 'selected' : '' ?>>Preparing</option>
+                        <option value="Ready" <?= $_GET['status'] == 'Ready' ? 'selected' : '' ?>>Ready</option>
+                        <option value="Completed" <?= $_GET['status'] == 'Completed' ? 'selected' : '' ?>>Completed</option>
+                        <option value="Cancelled" <?= $_GET['status'] == 'Cancelled' ? 'selected' : '' ?>>Cancelled</option>
+                    </select>
+                </div>
+            </form>
+
+>>>>>>> Stashed changes
             
             <div class="d-flex flex-column gap-4">
                 <?php if(count($orders) > 0): ?>
@@ -139,7 +189,11 @@ $conn->close();
                                         case 'Accepted':
                                             $statusClass = 'status-accepted';
                                             break;
+<<<<<<< Updated upstream
                                         case 'In Preparation':
+=======
+                                        case 'Preparing':
+>>>>>>> Stashed changes
                                             $statusClass = 'status-inpreparation';
                                             break;
                                     }
@@ -179,6 +233,7 @@ $conn->close();
                                         data-db-order-id="<?= htmlspecialchars($order['dbOrderID']) ?>">
                                     <i class="fas fa-info-circle me-1"></i> Order Details
                                 </button>
+<<<<<<< Updated upstream
                                 <?php if($order['orderStatus'] === 'Pending'): ?>
                                     <button class="btn-reject" 
                                             data-order-id="<?= htmlspecialchars($order['orderID']) ?>">
@@ -196,6 +251,30 @@ $conn->close();
                                     </button>
                                 <?php endif; ?>
                             </div>
+=======
+
+                                <?php if($order['orderStatus'] === 'Pending'): ?>
+                                    <button class="btn-reject" 
+                                            data-order-id="<?= htmlspecialchars($order['orderID']) ?>"
+                                            data-db-order-id="<?= htmlspecialchars($order['dbOrderID']) ?>">
+                                        <i class="fas fa-times-circle me-1"></i> Reject
+                                    </button>
+                                    <button class="btn-accept"  
+                                            data-order-id="<?= htmlspecialchars($order['orderID']) ?>"
+                                            data-db-order-id="<?= htmlspecialchars($order['dbOrderID']) ?>">
+                                        <i class="fas fa-check-circle me-1"></i> Accept
+                                    </button>
+                                <?php elseif(in_array($order['orderStatus'], ['Accepted', 'Preparing', 'Ready'])): ?>
+                                    <button class="btn-update"
+                                            data-order-id="<?= htmlspecialchars($order['orderID']) ?>"
+                                            data-db-order-id="<?= htmlspecialchars($order['dbOrderID']) ?>"
+                                            data-current-status="<?= $order['orderStatus'] ?>">
+                                        <i class="fas fa-arrow-alt-circle-up me-1"></i> Update Status
+                                    </button>
+                                <?php endif; ?>
+                            </div>
+
+>>>>>>> Stashed changes
                         </div>
                     <?php endforeach; ?>
                 <?php else: ?>
@@ -251,6 +330,7 @@ $conn->close();
         </div>
     </div>
     
+<<<<<<< Updated upstream
     <!-- Update Modal -->
     <div class="modal fade" id="updateModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -297,6 +377,9 @@ $conn->close();
             </div>
         </div>
     </div>
+=======
+    
+>>>>>>> Stashed changes
     
     <!-- Footer -->
     <footer class="bg-dark text-white py-3 text-center mt-auto">
@@ -307,7 +390,10 @@ $conn->close();
     <script>
         // Initialize modals
         const orderDetailModal = new bootstrap.Modal(document.getElementById('orderDetailModal'));
+<<<<<<< Updated upstream
         const feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
+=======
+>>>>>>> Stashed changes
         
         // Order Detail Modal
         document.getElementById('orderDetailModal').addEventListener('show.bs.modal', function(event) {
@@ -342,6 +428,7 @@ $conn->close();
             });
         });
         
+<<<<<<< Updated upstream
         // Feedback Modal
 document.getElementById('feedbackModal').addEventListener('show.bs.modal', function(event) {
     const button = event.relatedTarget;
@@ -416,6 +503,85 @@ document.getElementById('ratingForm').addEventListener('submit', function(e) {
 
 
 
+=======
+        function updateOrderStatus(orderID, newStatus) {
+            fetch('update_order_status.php', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `orderID=${encodeURIComponent(orderID)}&newStatus=${encodeURIComponent(newStatus)}`
+            })
+            .then(res => res.text())
+            .then(response => {
+                alert('Order status updated to ' + newStatus);
+                location.reload(); // Or update DOM dynamically if preferred
+            })
+            .catch(err => {
+                console.error('Failed:', err);
+                alert('Update failed');
+            });
+        }
+
+        // Accept
+        document.querySelectorAll('.btn-accept').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const orderID = btn.getAttribute('data-db-order-id');
+                updateOrderStatus(orderID, 'Accepted');
+            });
+        });
+
+        // Reject
+        document.querySelectorAll('.btn-reject').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const orderID = btn.getAttribute('data-db-order-id');
+                updateOrderStatus(orderID, 'Cancelled');
+            });
+        });
+
+        // Update Status
+        document.querySelectorAll('.btn-update').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const orderID = btn.getAttribute('data-db-order-id');
+                const currentStatus = btn.getAttribute('data-current-status');
+
+                let nextStatus = null;
+
+                switch (currentStatus) {
+                case 'Accepted':
+                    nextStatus = 'Preparing';
+                    break;
+                case 'Preparing':
+                    nextStatus = 'Ready';
+                    break;
+                case 'Ready':
+                    nextStatus = 'Completed';
+                    break;
+                default:
+                    alert('No further status update possible.');
+                    return;
+                }
+
+                updateOrderStatus(orderID, nextStatus);
+            });
+        });
+
+        let lastCheck = new Date().getTime();
+
+        // Check for new orders every 10 seconds
+        setInterval(() => {
+            fetch('check_new_orders.php?since=' + lastCheck)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.newOrder) {
+                        console.log('New order detected! Refreshing...');
+                        location.reload(); 
+                    }
+                    lastCheck = new Date().getTime(); // update timestamp
+                })
+                .catch(error => console.error('Check failed:', error));
+        }, 10000); 
+>>>>>>> Stashed changes
 
     </script>
 </body>
