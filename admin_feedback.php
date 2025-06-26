@@ -125,39 +125,39 @@ $conn->close();
     <div class="container my-4">
         <div class="admin-container">
             <div class="admin-header">
-                <div class="row align-items-center">
-                    <div class="col-md-6">
-                        <h2 class="mb-0">
-                            <i class="fas fa-star me-2"></i>
-                            Feedback
-                        </h2>
-                    </div>
-                </div>
+                <h1 class="h3 mb-0"><i class="fas fa-star me-2"></i>Feedback</h1>
+                <p class="mb-0 mt-2">View order status and feedback from customers</p>
             </div>
         </div>
 
         <div class="container">
             <!-- Statistics Cards -->
-            <div class="row mb-4">
-                <div class="col-md-3">
+            <div class="row mb-4 row-cols-5">
+                <div class="col ">
                     <div class="stats-card">
                         <div class="stats-number" id="total-orders">0</div>
                         <div class="text-muted">Total Orders</div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col ">
                     <div class="stats-card">
                         <div class="stats-number" id="pending-orders">0</div>
-                        <div class="text-muted">Pending Orders</div>
+                        <div class="text-muted">Non-completed Orders</div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col ">
                     <div class="stats-card">
                         <div class="stats-number" id="completed-orders">0</div>
                         <div class="text-muted">Completed Orders</div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col ">
+                    <div class="stats-card">
+                        <div class="stats-number" id="cancelled-orders">0</div>
+                        <div class="text-muted">Cancelled Orders</div>
+                    </div>
+                </div>
+                <div class="col ">
                     <div class="stats-card">
                         <div class="stats-number" id="rated-orders">0</div>
                         <div class="text-muted">Rated Orders</div>
@@ -409,6 +409,7 @@ $conn->close();
             let totalOrders = orders.length;
             let pendingOrders = 0;
             let completedOrders = 0;
+            let cancelledOrders = 0;
             let ratedOrders = 0;
 
             orders.forEach(order => {
@@ -417,6 +418,9 @@ $conn->close();
 
                 if (status === 'inpreparation' || status === 'ready' || status === 'pending' || status === 'accepted') {
                     pendingOrders++;
+                }
+                if (status === 'cancelled') {
+                    cancelledOrders++;
                 }
                 if (status === 'completed') {
                     completedOrders++;
@@ -429,6 +433,7 @@ $conn->close();
             document.getElementById('total-orders').textContent = totalOrders;
             document.getElementById('pending-orders').textContent = pendingOrders;
             document.getElementById('completed-orders').textContent = completedOrders;
+            document.getElementById('cancelled-orders').textContent = cancelledOrders;
             document.getElementById('rated-orders').textContent = ratedOrders;
         }
 

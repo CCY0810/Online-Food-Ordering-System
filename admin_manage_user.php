@@ -199,19 +199,18 @@ while ($row = $statsResult->fetch_assoc()) {
         </nav>
     </header>
 
+    <!-- Main Content -->
     <div class="container my-4">
         <div class="admin-container">
             <div class="admin-header">
-                <div class="text-center">
-                    <h1 class="display-5 mb-2"><i class="fas fa-users-cog me-3"></i>User Management System</h1>
-                    <p class="lead mb-0">Admin Panel - Manage Users Efficiently</p>
-                </div>
+                <h1 class="h3 mb-0"><i class="fas fa-users-cog me-3"></i>User Management System</h1>
+                <p class="mb-0 mt-2">Admin Panel - Manage Users Efficiently</p>
             </div>
         </div>
 
 
+        <!-- Alert Messages -->
         <div class="container-fluid my-4">
-            <!-- Alert Messages -->
             <?php if (!empty($message)): ?>
                 <div class="alert alert-<?php echo $messageType === 'success' ? 'success' : 'danger'; ?> alert-dismissible fade show"
                     role="alert">
