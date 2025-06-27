@@ -17,6 +17,7 @@ $orders = [];
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 // Get all orders (no filter by user)
 $orderQuery = "SELECT o.orderID, o.orderTime, o.orderStatus, o.total, o.paymentMethod, u.userID 
                FROM Orders o
@@ -29,6 +30,9 @@ $result = $stmt->get_result();
 
 =======
 =======
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
 >>>>>>> Stashed changes
 // Get selected status from GET 
 $statusFilter = isset($_GET['status']) ? $_GET['status'] : '';
@@ -60,8 +64,23 @@ $result = $stmt->get_result();
 
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 >>>>>>> Stashed changes
 =======
+>>>>>>> Stashed changes
+=======
+=======
+// Get all orders (no filter by user)
+$orderQuery = "SELECT o.orderID, o.orderTime, o.orderStatus, o.total, o.paymentMethod, u.userID 
+               FROM Orders o
+               JOIN User u ON o.userID = u.userID
+               ORDER BY o.orderTime DESC";
+
+$stmt = $conn->prepare($orderQuery);
+$stmt->execute();
+$result = $stmt->get_result();
+
+>>>>>>> 35abe96a4753a42711900242db63415d473b6e8d
 >>>>>>> Stashed changes
 while ($orderRow = $result->fetch_assoc()) {
     $orderID = $orderRow['orderID'];
@@ -114,7 +133,11 @@ $conn->close();
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="order.css">
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
         <style>
             .btn-notify {
                 background: #8e44ad;
@@ -136,6 +159,11 @@ $conn->close();
                 box-shadow: 0 6px 15px rgba(142, 68, 173, 0.3);
             }
         </style>
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> 35abe96a4753a42711900242db63415d473b6e8d
 >>>>>>> Stashed changes
     </head>
     <body class="d-flex flex-column min-vh-100 bg-light">
@@ -145,6 +173,15 @@ $conn->close();
         <nav class="d-flex align-items-center gap-3 gap-lg-5">
             <a href="mainPage.php" class="text-white text-decoration-none fw-medium position-relative">Home</a>
             <a href="menu.php" class="text-white text-decoration-none fw-medium position-relative">Menu</a>
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+            <?php if($_SESSION['user_role'] == 'admin' || $_SESSION['user_role'] == 'staff') { ?>
+                    <a href="edit_food_availability.php" class="text-white text-decoration-none fw-medium position-relative">Edit</a>
+            <?php } ?>
+=======
+>>>>>>> 35abe96a4753a42711900242db63415d473b6e8d
+>>>>>>> Stashed changes
             <a href="redirect_orders.php" class="text-white text-decoration-none fw-medium position-relative">Order</a>
             <div class="d-flex align-items-center gap-4 ms-3">
                 <a href="cart.php" class="header-link text-white text-decoration-none fw-medium d-flex align-items-center gap-2">
@@ -173,8 +210,12 @@ $conn->close();
             <h2 class="page-title">Your Order Status</h2>
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
 =======
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
 >>>>>>> Stashed changes
             <form method="GET" class="mb-4">
                 <div class="d-flex align-items-center">
@@ -192,8 +233,13 @@ $conn->close();
             </form>
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 >>>>>>> Stashed changes
 =======
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> 35abe96a4753a42711900242db63415d473b6e8d
 >>>>>>> Stashed changes
             
             <div class="d-flex flex-column gap-4">
@@ -227,12 +273,20 @@ $conn->close();
                                             break;
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                                         case 'In Preparation':
 =======
                                         case 'Preparing':
 >>>>>>> Stashed changes
 =======
                                         case 'Preparing':
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+                                        case 'Preparing':
+=======
+                                        case 'In Preparation':
+>>>>>>> 35abe96a4753a42711900242db63415d473b6e8d
 >>>>>>> Stashed changes
                                             $statusClass = 'status-inpreparation';
                                             break;
@@ -269,20 +323,33 @@ $conn->close();
                             
                             <div class="order-actions">
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
                                  <button class="btn-notify"
                                         data-bs-toggle="modal"
                                         data-bs-target="#notifyModal"
                                         data-order-id="<?= htmlspecialchars($order['dbOrderID']) ?>">
+<<<<<<< Updated upstream
                                     <i class="fas fa-bell"></i> Notify
                                 </button>
 
+>>>>>>> Stashed changes
+=======
+                                    <i class="fas fa-comment-dots"></i> Send Message
+                                </button>
+
+=======
+>>>>>>> 35abe96a4753a42711900242db63415d473b6e8d
 >>>>>>> Stashed changes
                                 <button class="btn-detail" data-bs-toggle="modal" data-bs-target="#orderDetailModal" 
                                         data-order-id="<?= htmlspecialchars($order['orderID']) ?>"
                                         data-db-order-id="<?= htmlspecialchars($order['dbOrderID']) ?>">
                                     <i class="fas fa-info-circle me-1"></i> Order Details
                                 </button>
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
                                 <?php if($order['orderStatus'] === 'Pending'): ?>
@@ -304,6 +371,9 @@ $conn->close();
                             </div>
 =======
 =======
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
 >>>>>>> Stashed changes
 
                                 <?php if($order['orderStatus'] === 'Pending'): ?>
@@ -328,8 +398,30 @@ $conn->close();
                             </div>
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 >>>>>>> Stashed changes
 =======
+>>>>>>> Stashed changes
+=======
+=======
+                                <?php if($order['orderStatus'] === 'Pending'): ?>
+                                    <button class="btn-reject" 
+                                            data-order-id="<?= htmlspecialchars($order['orderID']) ?>">
+                                        <i class="fas fa-times-circle me-1"></i> Reject
+                                    </button>
+                                    <button class="btn-accept"  
+                                            data-order-id="<?= htmlspecialchars($order['orderID']) ?>">
+                                        <i class="fas fa-check-circle me-1"></i> Accept
+                                    </button>
+                                <?php else: ?>
+                                    <button class="btn-update" data-bs-toggle="modal" data-bs-target="#updateModel" 
+                                            data-order-id="<?= htmlspecialchars($order['orderID']) ?>"
+                                            data-db-order-id="<?= htmlspecialchars($order['dbOrderID']) ?>">
+                                        <i class="fas fa-arrow-alt-circle-up"></i> Update Status
+                                    </button>
+                                <?php endif; ?>
+                            </div>
+>>>>>>> 35abe96a4753a42711900242db63415d473b6e8d
 >>>>>>> Stashed changes
                         </div>
                     <?php endforeach; ?>
@@ -388,6 +480,32 @@ $conn->close();
     
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+    <!-- Notification Modal -->
+    <div class="modal fade" id="notifyModal" tabindex="-1" aria-labelledby="notifyModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="post" action="send_notification.php">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Send Notification to Customer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="orderID" id="notify-order-id">
+                    <textarea name="message" class="form-control" placeholder="Type message to customer..." required></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Send</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    </div>
+
+=======
+>>>>>>> Stashed changes
     <!-- Update Modal -->
     <div class="modal fade" id="updateModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -434,6 +552,7 @@ $conn->close();
             </div>
         </div>
     </div>
+<<<<<<< Updated upstream
 =======
     
 >>>>>>> Stashed changes
@@ -461,6 +580,10 @@ $conn->close();
     </div>
 
 >>>>>>> Stashed changes
+=======
+    
+>>>>>>> 35abe96a4753a42711900242db63415d473b6e8d
+>>>>>>> Stashed changes
     <!-- Footer -->
     <footer class="bg-dark text-white py-3 text-center mt-auto">
         <script src="script/footer.js" type="text/javascript"></script>
@@ -472,10 +595,17 @@ $conn->close();
         const orderDetailModal = new bootstrap.Modal(document.getElementById('orderDetailModal'));
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         const feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
 =======
 >>>>>>> Stashed changes
 =======
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+=======
+        const feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
+>>>>>>> 35abe96a4753a42711900242db63415d473b6e8d
 >>>>>>> Stashed changes
         
         // Order Detail Modal
@@ -513,6 +643,96 @@ $conn->close();
         
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+        function updateOrderStatus(orderID, newStatus) {
+            fetch('update_order_status.php', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `orderID=${encodeURIComponent(orderID)}&newStatus=${encodeURIComponent(newStatus)}`
+            })
+            .then(res => res.text())
+            .then(response => {
+                alert('Order status updated to ' + newStatus);
+                location.reload(); // Or update DOM dynamically if preferred
+            })
+            .catch(err => {
+                console.error('Failed:', err);
+                alert('Update failed');
+            });
+        }
+
+        // Accept
+        document.querySelectorAll('.btn-accept').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const orderID = btn.getAttribute('data-db-order-id');
+                updateOrderStatus(orderID, 'Accepted');
+            });
+        });
+
+        // Reject
+        document.querySelectorAll('.btn-reject').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const orderID = btn.getAttribute('data-db-order-id');
+                updateOrderStatus(orderID, 'Cancelled');
+            });
+        });
+
+        // Update Status
+        document.querySelectorAll('.btn-update').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const orderID = btn.getAttribute('data-db-order-id');
+                const currentStatus = btn.getAttribute('data-current-status');
+
+                let nextStatus = null;
+
+                switch (currentStatus) {
+                case 'Accepted':
+                    nextStatus = 'Preparing';
+                    break;
+                case 'Preparing':
+                    nextStatus = 'Ready';
+                    break;
+                case 'Ready':
+                    nextStatus = 'Completed';
+                    break;
+                default:
+                    alert('No further status update possible.');
+                    return;
+                }
+
+                updateOrderStatus(orderID, nextStatus);
+            });
+        });
+
+        let lastCheck = new Date().getTime();
+
+        // Check for new orders every 10 seconds
+        setInterval(() => {
+            const modalsOpen = document.querySelectorAll('.modal.show').length > 0;
+            fetch('check_new_orders.php?since=' + lastCheck)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.newOrder && !modalsOpen) {
+                        console.log('New order detected! Refreshing...');
+                        location.reload(); 
+                    }
+                    lastCheck = new Date().getTime(); // update timestamp
+                })
+                .catch(error => console.error('Check failed:', error));
+        }, 10000); 
+
+        const notifyModal = document.getElementById('notifyModal');
+        notifyModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const orderID = button.getAttribute('data-order-id');
+            document.getElementById('notify-order-id').value = orderID;
+        });
+=======
+>>>>>>> Stashed changes
         // Feedback Modal
 document.getElementById('feedbackModal').addEventListener('show.bs.modal', function(event) {
     const button = event.relatedTarget;
@@ -586,6 +806,7 @@ document.getElementById('ratingForm').addEventListener('submit', function(e) {
 });
 
 
+<<<<<<< Updated upstream
 
 =======
 =======
@@ -685,6 +906,10 @@ document.getElementById('ratingForm').addEventListener('submit', function(e) {
             const orderID = button.getAttribute('data-order-id');
             document.getElementById('notify-order-id').value = orderID;
         });
+
+>>>>>>> Stashed changes
+=======
+>>>>>>> 35abe96a4753a42711900242db63415d473b6e8d
 
 >>>>>>> Stashed changes
 
