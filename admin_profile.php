@@ -35,6 +35,8 @@ $profileImage = htmlspecialchars($user['profileImage']);
     <head>
         <title>Profile</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+            <link rel="stylesheet" href="admin.css">
+
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>
             body {
@@ -124,8 +126,8 @@ $profileImage = htmlspecialchars($user['profileImage']);
             <nav class="d-flex align-items-center gap-3 gap-lg-5">
                 <a href="mainPage.php" class="text-white text-decoration-none fw-medium position-relative">Home</a>
                     <a href="admin_manage_menu.php" class="text-white text-decoration-none fw-medium position-relative">Manage Menu</a>
-                    <a href="admin_sales_report.php" class="text-white text-decoration-none fw-medium position-relative">Sales Report</a>
                     <a href="admin_manage_user.php" class="text-white text-decoration-none fw-medium position-relative">Manage User</a>
+                    <a href="admin_sales_report.php" class="text-white text-decoration-none fw-medium position-relative">Sales Report</a>
                     <a href="admin_feedback.php" class="text-white text-decoration-none fw-medium position-relative">Feedback</a>
                     
                 <div class="d-flex align-items-center gap-4 ms-3">

@@ -3,7 +3,6 @@ session_start();
 
 require_once("config.php");
 
-// Handle form submissions 
 $message = "";
 $messageType = "";
 
@@ -28,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Function to add new user
+// Function add new user
 function addUser($conn, $data)
 {
     $userID = $conn->real_escape_string($data['userID']);
@@ -39,7 +38,7 @@ function addUser($conn, $data)
     $contactNumber = $conn->real_escape_string($data['contactNumber']);
     $address = $conn->real_escape_string($data['address']);
 
-    // Check if userID or email already exists
+    //this only check the userID and email exits or not in database 
     $checkSql = "SELECT userID, email FROM User WHERE userID = '$userID' OR email = '$email'";
     $checkResult = $conn->query($checkSql);
 
@@ -57,7 +56,7 @@ function addUser($conn, $data)
     }
 }
 
-// Function to update user
+// Function to update user (after edit the user info)
 function updateUser($conn, $data)
 {
     $userID = $conn->real_escape_string($data['userID']);
@@ -82,7 +81,7 @@ function updateUser($conn, $data)
     }
 }
 
-// Function to delete user
+// Function to delete user 
 function deleteUser($conn, $userID)
 {
     $userID = $conn->real_escape_string($userID);
@@ -95,7 +94,7 @@ function deleteUser($conn, $userID)
     }
 }
 
-// Function to bulk delete users
+// Function to bulk delete users (selected many)
 function bulkDeleteUsers($conn, $userIDs)
 {
     if (empty($userIDs)) {
@@ -134,7 +133,6 @@ if (!empty($roleFilter)) {
 $sql .= " ORDER BY $sortBy $sortOrder";
 $result = $conn->query($sql);
 
-// Get user for editing
 $editUser = null;
 if (isset($_GET['edit'])) {
     $editID = $conn->real_escape_string($_GET['edit']);
@@ -155,8 +153,6 @@ while ($row = $statsResult->fetch_assoc()) {
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
-
 <head>
     <title>User Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -174,10 +170,10 @@ while ($row = $statsResult->fetch_assoc()) {
             <a href="mainPage.php" class="text-white text-decoration-none fw-medium position-relative">Home</a>
             <a href="admin_manage_menu.php" class="text-white text-decoration-none fw-medium position-relative">Manage
                 Menu</a>
-            <a href="admin_sales_report.php" class="text-white text-decoration-none fw-medium position-relative">Sales
-                Report</a>
             <a href="admin_manage_user.php" class="text-white text-decoration-none fw-medium position-relative">Manage
                 User</a>
+            <a href="admin_sales_report.php" class="text-white text-decoration-none fw-medium position-relative">Sales
+                Report</a>
             <a href="admin_feedback.php"
                 class="text-white text-decoration-none fw-medium position-relative">Feedback</a>
             <div class="dropdown">
@@ -189,7 +185,6 @@ while ($row = $statsResult->fetch_assoc()) {
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
                     <li><a class="dropdown-item" href="admin_profile.php">My Profile</a></li>
-                    <!--li><a class="dropdown-item" href="edit_profile.php">Edit Profile</a></li-->
                     <li>
                         <hr class="dropdown-divider">
                     </li>
@@ -210,163 +205,156 @@ while ($row = $statsResult->fetch_assoc()) {
 
 
         <!-- Alert Messages -->
-        <div class="container-fluid my-4">
-            <?php if (!empty($message)): ?>
-                <div class="alert alert-<?php echo $messageType === 'success' ? 'success' : 'danger'; ?> alert-dismissible fade show"
-                    role="alert">
-                    <i
-                        class="fas fa-<?php echo $messageType === 'success' ? 'check-circle' : 'exclamation-triangle'; ?> me-2"></i>
-                    <?php echo htmlspecialchars($message); ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            <?php endif; ?>
+        <?php if (!empty($message)): ?>
+            <div class="alert alert-<?php echo $messageType === 'success' ? 'success' : 'danger'; ?> alert-dismissible fade show"
+                role="alert">
+                <i
+                    class="fas fa-<?php echo $messageType === 'success' ? 'check-circle' : 'exclamation-triangle'; ?> me-2"></i>
+                <?php echo htmlspecialchars($message); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <?php endif; ?>
 
-            <!-- Statistics Cards -->
-            <div class="row mb-4">
-                <div class="col-xl-3 col-md-6 mb-3">
-                    <div class="stats-card text-center">
-                        <div class="stat-icon stat-total mx-auto">
-                            <i class="fas fa-users text-white"></i>
-                        </div>
-                        <h2 class="fw-bold text-dark"><?php echo array_sum($stats); ?></h2>
-                        <p class="text-muted mb-0">Total Users</p>
+        <!-- Statistics Cards -->
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="stats-card text-center">
+                    <div class="stat-icon stat-total mx-auto">
+                        <i class="fas fa-users text-white"></i>
+                    </div>
+                    <h2 class="fw-bold text-dark"><?php echo array_sum($stats); ?></h2>
+                    <p class="text-muted mb-0">Total Users</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="stats-card text-center">
+                    <div class="stat-icon stat-admin mx-auto">
+                        <i class="fas fa-user-shield text-white"></i>
+                    </div>
+                    <h2 class="fw-bold text-dark"><?php echo isset($stats['admin']) ? $stats['admin'] : 0; ?></h2>
+                    <p class="text-muted mb-0">Administrators</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="stats-card text-center">
+                    <div class="stat-icon stat-staff mx-auto">
+                        <i class="fas fa-user-tie text-white"></i>
+                    </div>
+                    <h2 class="fw-bold text-dark"><?php echo isset($stats['staff']) ? $stats['staff'] : 0; ?></h2>
+                    <p class="text-muted mb-0">Staff Members</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="stats-card text-center">
+                    <div class="stat-icon stat-customer mx-auto">
+                        <i class="fas fa-user text-white"></i>
+                    </div>
+                    <h2 class="fw-bold text-dark"><?php echo isset($stats['customer']) ? $stats['customer'] : 0; ?>
+                    </h2>
+                    <p class="text-muted mb-0">Customers</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls Section -->
+        <div class="controls-section">
+            <div class="row align-items-center mb-4 ">
+                <div class="col-md-6">
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addModal">
+                            <i class="fas fa-plus me-2"></i>Add New User
+                        </button>
+                        <button class="btn btn-danger" onclick="bulkDelete()">
+                            <i class="fas fa-trash me-2"></i>Delete Selected
+                        </button>
+
                     </div>
                 </div>
-                <div class="col-xl-3 col-md-6 mb-3">
-                    <div class="stats-card text-center">
-                        <div class="stat-icon stat-admin mx-auto">
-                            <i class="fas fa-user-shield text-white"></i>
+                <div class="col-md-6">
+                    <form method="GET" class="d-flex gap-2 justify-content-md-end">
+                        <div class="input-group" style="max-width: 300px;">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            <input type="text" class="form-control" name="search" placeholder="Search users..."
+                                value="<?php echo htmlspecialchars($search); ?>">
                         </div>
-                        <h2 class="fw-bold text-dark"><?php echo isset($stats['admin']) ? $stats['admin'] : 0; ?></h2>
-                        <p class="text-muted mb-0">Administrators</p>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-md-6 mb-3">
-                    <div class="stats-card text-center">
-                        <div class="stat-icon stat-staff mx-auto">
-                            <i class="fas fa-user-tie text-white"></i>
-                        </div>
-                        <h2 class="fw-bold text-dark"><?php echo isset($stats['staff']) ? $stats['staff'] : 0; ?></h2>
-                        <p class="text-muted mb-0">Staff Members</p>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-md-6 mb-3">
-                    <div class="stats-card text-center">
-                        <div class="stat-icon stat-customer mx-auto">
-                            <i class="fas fa-user text-white"></i>
-                        </div>
-                        <h2 class="fw-bold text-dark"><?php echo isset($stats['customer']) ? $stats['customer'] : 0; ?>
-                        </h2>
-                        <p class="text-muted mb-0">Customers</p>
-                    </div>
+                        <select name="role_filter" class="form-select" style="max-width: 150px;">
+                            <option value="">All Roles</option>
+                            <option value="admin" <?php echo $roleFilter === 'admin' ? 'selected' : ''; ?>>Admin
+                            </option>
+                            <option value="staff" <?php echo $roleFilter === 'staff' ? 'selected' : ''; ?>>Staff
+                            </option>
+                            <option value="customer" <?php echo $roleFilter === 'customer' ? 'selected' : ''; ?>>
+                                Customer
+                            </option>
+                        </select>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-filter"></i>
+                        </button>
+                        <a href="?" class="btn btn-outline-secondary">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </form>
                 </div>
             </div>
 
-            <!-- Controls Section -->
-            <div class="controls-section">
-                <div class="row align-items-center mb-4 ">
-                    <div class="col-md-6">
-                        <div class="d-flex gap-2 flex-wrap">
-                            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addModal">
-                                <i class="fas fa-plus me-2"></i>Add New User
-                            </button>
-                            <button class="btn btn-danger" onclick="bulkDelete()">
-                                <i class="fas fa-trash me-2"></i>Delete Selected
-                            </button>
-                            <button class="btn btn-info" onclick="location.reload()">
-                                <i class="fas fa-sync-alt me-2"></i>Refresh
-                            </button>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <form method="GET" class="d-flex gap-2 justify-content-md-end">
-                            <div class="input-group" style="max-width: 300px;">
-                                <span class="input-group-text"><i class="fas fa-search"></i></span>
-                                <input type="text" class="form-control" name="search" placeholder="Search users..."
-                                    value="<?php echo htmlspecialchars($search); ?>">
-                            </div>
-                            <select name="role_filter" class="form-select" style="max-width: 150px;">
-                                <option value="">All Roles</option>
-                                <option value="admin" <?php echo $roleFilter === 'admin' ? 'selected' : ''; ?>>Admin
-                                </option>
-                                <option value="staff" <?php echo $roleFilter === 'staff' ? 'selected' : ''; ?>>Staff
-                                </option>
-                                <option value="customer" <?php echo $roleFilter === 'customer' ? 'selected' : ''; ?>>
-                                    Customer
-                                </option>
-                            </select>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-filter"></i>
-                            </button>
-                            <a href="?" class="btn btn-outline-secondary">
-                                <i class="fas fa-times"></i>
-                            </a>
-                        </form>
-                    </div>
-                </div>
+            <!-- Users Table -->
+            <div class="table-container ">
+                <div class="table-responsive ">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" class="form-check-input" id="selectAll"
+                                        onchange="toggleSelectAll()"></th>
+                                <th onclick="sortTable('userID')" class="user-select-none">
+                                    <i class="fas fa-id-card me-2"></i>User ID <i class="fas fa-sort"></i>
+                                </th>
+                                <th onclick="sortTable('role')" class="user-select-none">
+                                    <i class="fas fa-user-tag me-2"></i>Role <i class="fas fa-sort"></i>
+                                </th>
+                                <th onclick="sortTable('name')" class="user-select-none">
+                                    <i class="fas fa-user me-2"></i>Name <i class="fas fa-sort"></i>
+                                </th>
+                                <th onclick="sortTable('age')" class="user-select-none">
+                                    <i class="fas fa-birthday-cake me-2"></i>Age <i class="fas fa-sort"></i>
+                                </th>
+                                <th onclick="sortTable('email')" class="user-select-none">
+                                    <i class="fas fa-envelope me-2"></i>Email <i class="fas fa-sort"></i>
+                                </th>
+                                <th onclick="sortTable('contactNumber')" class="user-select-none">
+                                    <i class="fas fa-phone me-2"></i>Contact <i class="fas fa-sort"></i>
+                                </th>
+                                <th onclick="sortTable('address')" class="user-select-none">
+                                    <i class="fas fa-map-marker-alt me-2"></i>Address <i class="fas fa-sort"></i>
+                                </th>
+                                <th class="text-center">
+                                    <i class="fas fa-cogs me-2"></i>Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if ($result->num_rows > 0): ?>
+                                <?php while ($row = $result->fetch_assoc()): ?>
+                                    <tr>
+                                        <td><input type="checkbox" class="form-check-input userCheckbox"
+                                                value="<?php echo $row['userID']; ?>"></td>
+                                        <td><strong><?php echo htmlspecialchars($row['userID']); ?></strong></td>
+                                        <td><span
+                                                class="badge badge-<?php echo $row['role']; ?> text-white"><?php echo ucfirst($row['role']); ?></span>
+                                        </td>
+                                        <td><?php echo htmlspecialchars($row['name']); ?></td>
+                                        <td><?php echo $row['age']; ?> years</td>
+                                        <td><a href="mailto:<?php echo $row['email']; ?>"
+                                                class="text-decoration-none"><?php echo htmlspecialchars($row['email']); ?></a>
+                                        </td>
+                                        <td><a href="tel:<?php echo $row['contactNumber']; ?>"
+                                                class="text-decoration-none"><?php echo htmlspecialchars($row['contactNumber']); ?></a>
+                                        </td>
+                                        <td><small><?php echo htmlspecialchars($row['address']); ?></small></td>
+                                        <td class="text-center">
 
-                <!-- Users Table -->
-                <!--div class="admin-container"-->
-                <div class="table-container ">
-                    <div class="table-responsive ">
-                        <table class="table table-hover mb-0">
-                            <thead>
-                                <tr>
-                                    <th><input type="checkbox" class="form-check-input" id="selectAll"
-                                            onchange="toggleSelectAll()"></th>
-                                    <th onclick="sortTable('userID')" class="user-select-none">
-                                        <i class="fas fa-id-card me-2"></i>User ID <i class="fas fa-sort"></i>
-                                    </th>
-                                    <th onclick="sortTable('role')" class="user-select-none">
-                                        <i class="fas fa-user-tag me-2"></i>Role <i class="fas fa-sort"></i>
-                                    </th>
-                                    <th onclick="sortTable('name')" class="user-select-none">
-                                        <i class="fas fa-user me-2"></i>Name <i class="fas fa-sort"></i>
-                                    </th>
-                                    <th onclick="sortTable('age')" class="user-select-none">
-                                        <i class="fas fa-birthday-cake me-2"></i>Age <i class="fas fa-sort"></i>
-                                    </th>
-                                    <th onclick="sortTable('email')" class="user-select-none">
-                                        <i class="fas fa-envelope me-2"></i>Email <i class="fas fa-sort"></i>
-                                    </th>
-                                    <th onclick="sortTable('contactNumber')" class="user-select-none">
-                                        <i class="fas fa-phone me-2"></i>Contact <i class="fas fa-sort"></i>
-                                    </th>
-                                    <th onclick="sortTable('address')" class="user-select-none">
-                                        <i class="fas fa-map-marker-alt me-2"></i>Address <i class="fas fa-sort"></i>
-                                    </th>
-                                    <th class="text-center">
-                                        <i class="fas fa-cogs me-2"></i>Actions
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if ($result->num_rows > 0): ?>
-                                    <?php while ($row = $result->fetch_assoc()): ?>
-                                        <tr>
-                                            <td><input type="checkbox" class="form-check-input userCheckbox"
-                                                    value="<?php echo $row['userID']; ?>"></td>
-                                            <td><strong><?php echo htmlspecialchars($row['userID']); ?></strong></td>
-                                            <td><span
-                                                    class="badge badge-<?php echo $row['role']; ?> text-white"><?php echo ucfirst($row['role']); ?></span>
-                                            </td>
-                                            <td><?php echo htmlspecialchars($row['name']); ?></td>
-                                            <td><?php echo $row['age']; ?> years</td>
-                                            <td><a href="mailto:<?php echo $row['email']; ?>"
-                                                    class="text-decoration-none"><?php echo htmlspecialchars($row['email']); ?></a>
-                                            </td>
-                                            <td><a href="tel:<?php echo $row['contactNumber']; ?>"
-                                                    class="text-decoration-none"><?php echo htmlspecialchars($row['contactNumber']); ?></a>
-                                            </td>
-                                            <td><small><?php echo htmlspecialchars($row['address']); ?></small></td>
-                                            <td class="text-center">
-                                                <!-- <button class="btn btn-warning btn-sm action-btn"
-                                    onclick="editUser('<?//php echo $row['userID']; ?>')" title="Edit User">
-                                    <i class="fas fa-edit"></i>
-                                </button> -->
-                                                <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                                    data-bs-target="#editModal"
-                                                    onclick="editUser(
+                                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                                                data-bs-target="#editModal"
+                                                onclick="editUser(
                                                         '<?php echo htmlspecialchars($row['userID'], ENT_QUOTES); ?>',
                                                         '<?php echo htmlspecialchars($row['role'], ENT_QUOTES); ?>',
                                                         '<?php echo htmlspecialchars($row['name'], ENT_QUOTES); ?>',
@@ -374,29 +362,27 @@ while ($row = $statsResult->fetch_assoc()) {
                                                         '<?php echo htmlspecialchars($row['email'], ENT_QUOTES); ?>',
                                                         '<?php echo htmlspecialchars($row['contactNumber'], ENT_QUOTES); ?>',
                                                         '<?php echo htmlspecialchars($row['address'], ENT_QUOTES); ?>')">
-                                                    <i class="fas fa-edit"></i> Edit
-                                                </button>
-                                                <button class="btn btn-danger btn-sm action-btn"
-                                                    onclick="deleteUser('<?php echo $row['userID']; ?>')" title="Delete User">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    <?php endwhile; ?>
-                                <?php else: ?>
-                                    <tr>
-                                        <td colspan="9" class="text-center py-4">
-                                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
-                                            <h5 class="text-muted">No users found</h5>
-                                            <small class="text-muted">Try adjusting your search criteria</small>
+                                                <i class="fas fa-edit"></i> Edit
+                                            </button>
+                                            <button class="btn btn-danger btn-sm action-btn"
+                                                onclick="deleteUser('<?php echo $row['userID']; ?>')" title="Delete User">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
                                         </td>
                                     </tr>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
+                                <?php endwhile; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="9" class="text-center py-4">
+                                        <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                                        <h5 class="text-muted">No users found</h5>
+                                        <small class="text-muted">Try adjusting your search criteria</small>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
                 </div>
-
             </div>
         </div>
 
@@ -481,7 +467,6 @@ while ($row = $statsResult->fetch_assoc()) {
             </div>
         </div>
 
-
         <!-- Edit User Modal -->
         <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -500,8 +485,7 @@ while ($row = $statsResult->fetch_assoc()) {
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label"><i class="fas fa-id-card me-2"></i>User
-                                            ID</label>
+                                        <label class="form-label"><i class="fas fa-id-card me-2"></i>User ID</label>
                                         <input type="text" class="form-control" id="editUserIDDisplay" disabled>
                                     </div>
                                 </div>
@@ -521,8 +505,7 @@ while ($row = $statsResult->fetch_assoc()) {
                             <div class="row">
                                 <div class="col-md-8">
                                     <div class="mb-3">
-                                        <label class="form-label"><i class="fas fa-user me-2"></i>Full
-                                            Name</label>
+                                        <label class="form-label"><i class="fas fa-user me-2"></i>Full Name</label>
                                         <input type="text" class="form-control" name="name" id="editName" required>
                                     </div>
                                 </div>
@@ -536,14 +519,12 @@ while ($row = $statsResult->fetch_assoc()) {
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label"><i class="fas fa-envelope me-2"></i>Email
-                                    Address</label>
+                                <label class="form-label"><i class="fas fa-envelope me-2"></i>Email Address</label>
                                 <input type="email" class="form-control" name="email" id="editEmail" required>
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label"><i class="fas fa-phone me-2"></i>Contact
-                                    Number</label>
+                                <label class="form-label"><i class="fas fa-phone me-2"></i>Contact Number</label>
                                 <input type="text" class="form-control" name="contactNumber" id="editContactNumber"
                                     required>
                             </div>
@@ -570,7 +551,7 @@ while ($row = $statsResult->fetch_assoc()) {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Select all functionality
+        //tick for all (select all)
         function toggleSelectAll() {
             const selectAll = document.getElementById('selectAll');
             const checkboxes = document.getElementsByClassName('userCheckbox');
@@ -580,8 +561,6 @@ while ($row = $statsResult->fetch_assoc()) {
             }
         }
 
-
-        // Bulk delete
         function bulkDelete() {
             const checkboxes = document.getElementsByClassName('userCheckbox');
             const selected = [];
@@ -625,7 +604,6 @@ while ($row = $statsResult->fetch_assoc()) {
             }
         }
 
-
         // Edit user
         function editUser(userID, role, name, age, email, contactNumber, address) {
             document.getElementById('editUserID').value = userID;
@@ -648,7 +626,6 @@ while ($row = $statsResult->fetch_assoc()) {
             if (currentSort === column && currentOrder === 'ASC') {
                 newOrder = 'DESC';
             }
-
             url.searchParams.set('sort', column);
             url.searchParams.set('order', newOrder);
             window.location.href = url.toString();
@@ -660,7 +637,6 @@ while ($row = $statsResult->fetch_assoc()) {
         <?php endif; ?>
     </script>
 </body>
-
 </html>
 
 <?php

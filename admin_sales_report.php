@@ -8,7 +8,6 @@ $startDate = isset($_GET['start_date']) ? $_GET['start_date'] : date('Y-m-01');
 $endDate = isset($_GET['end_date']) ? $_GET['end_date'] : date('Y-m-d');
 $period = isset($_GET['period']) ? $_GET['period'] : 'month';
 
-// Sales Statistics
 $totalSales = 0;
 $totalOrders = 0;
 $completedOrders = 0;
@@ -33,7 +32,7 @@ $completedOrders = $salesData['completed_orders'];
 $totalSales = $salesData['total_sales'];
 $avgOrderValue = $completedOrders > 0 ? $totalSales / $completedOrders : 0;
 
-// Daily Sales Data for Chart
+// Sales Data for Chart
 $dailySales = [];
 $dailySalesQuery = "SELECT 
     DATE(orderTime) as order_date,
@@ -143,8 +142,6 @@ $conn->close();
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -153,84 +150,6 @@ $conn->close();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="admin.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        .chart-container {
-            position: relative;
-            height: 400px;
-            margin-bottom: 2rem;
-        }
-
-        .metric-card {
-            background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-            border-left: 4px solid;
-        }
-
-        .metric-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .metric-card.sales {
-            border-left-color: #00b894;
-        }
-
-        .metric-card.orders {
-            border-left-color: #667eea;
-        }
-
-        .metric-card.average {
-            border-left-color:#fde73d;
-        }
-
-        .metric-card.completed {
-            border-left-color: #00cec9;
-        }
-
-        .metric-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-
-        .metric-label {
-            color: #6c757d;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .table-container {
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
-        }
-
-        .section-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 1rem 1.5rem;
-            margin: 0;
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
-
-        .export-buttons {
-            gap: 0.5rem;
-        }
-
-        .date-filter-form {
-            background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
-        }
-    </style>
 </head>
 
 <body>
@@ -242,10 +161,10 @@ $conn->close();
             <a href="mainPage.php" class="text-white text-decoration-none fw-medium position-relative">Home</a>
             <a href="admin_manage_menu.php" class="text-white text-decoration-none fw-medium position-relative">Manage
                 Menu</a>
-            <a href="admin_sales_report.php" class="text-white text-decoration-none fw-medium position-relative">Sales
-                Report</a>
             <a href="admin_manage_user.php" class="text-white text-decoration-none fw-medium position-relative">Manage
                 User</a>
+            <a href="admin_sales_report.php" class="text-white text-decoration-none fw-medium position-relative">Sales
+                Report</a>
             <a href="admin_feedback.php"
                 class="text-white text-decoration-none fw-medium position-relative">Feedback</a>
             <div class="dropdown">
@@ -335,7 +254,7 @@ $conn->close();
         </div>
 
         <div class="admin-container  p-4">
-            <!-- Export Buttons -->
+            <!-- Export Buttons (print only)-->
             <div class="d-flex justify-content-end mb-4 export-buttons">
                 <button class="btn btn-outline-primary" onclick="window.print()">
                     <i class="fas fa-print me-1"></i> Print Report
@@ -386,7 +305,7 @@ $conn->close();
                                 </thead>
                                 <tbody>
                                     <?php if (empty($topItems)): ?>
-                                        <tr>    
+                                        <tr>
                                             <td colspan="3" class="text-center py-4 text-muted">
                                                 <i class="fas fa-inbox fa-2x mb-2"></i><br>
                                                 No sales data available for the selected period
@@ -481,12 +400,10 @@ $conn->close();
                                         <?php
                                         $totalPaymentRevenue = array_sum(array_column($paymentStats, 'method_revenue'));
                                         foreach ($paymentStats as $payment):
-                                            $percentage = $totalPaymentRevenue > 0 ? ($payment['method_revenue'] / $totalPaymentRevenue) * 100 : 0;
-                                            ?>
+                                            $percentage = $totalPaymentRevenue > 0 ? ($payment['method_revenue'] / $totalPaymentRevenue) * 100 : 0; ?>
                                             <tr>
                                                 <td>
-                                                    <i
-                                                        class="fas fa-<?= $payment['paymentMethod'] === 'Cash' ? 'money-bill' : 'credit-card' ?> me-2 text-primary"></i>
+                                                    <i class="fas fa-<?= $payment['paymentMethod'] === 'Cash' ? 'money-bill' : 'credit-card' ?> me-2 text-primary"></i>
                                                     <?= htmlspecialchars($payment['paymentMethod']) ?>
                                                 </td>
                                                 <td><?= number_format($payment['method_count']) ?></td>
@@ -514,7 +431,7 @@ $conn->close();
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Daily Sales Chart
+        // Sales Chart
         const dailySalesCtx = document.getElementById('dailySalesChart').getContext('2d');
         const dailySalesData = <?= json_encode($dailySales) ?>;
 
@@ -589,7 +506,7 @@ $conn->close();
                         '#fd79a8', // In Preparation - Pink
                         '#00cec9', // Ready - Teal
                         '#74b9ff', // Accepted - Light Blue
-                        '#e17055'  // Cancelled - Orange Red
+                        '#e17055'  // Cancelled - Orange Red??
                     ],
                     borderWidth: 2,
                     borderColor: '#fff'
@@ -630,13 +547,11 @@ $conn->close();
                     endDate = new Date().toISOString().split('T')[0];
                     break;
                 default:
-                    return; // Custom - let user set dates manually
+                    return; // custom (user can set dates manually)
             }
-
             document.getElementById('start_date').value = startDate;
             document.getElementById('end_date').value = endDate;
         });
     </script>
 </body>
-
 </html>

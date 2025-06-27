@@ -3,28 +3,25 @@ session_start();
 
 require_once("config.php");
 
-// Handle form submissions
 $message = '';
 $messageType = '';
 
-// Add menu item
+// Add menu item 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_menu') {
     $itemName = mysqli_real_escape_string($conn, $_POST['itemName']);
-    $itemPrice = (float)$_POST['itemPrice'];
-    $categoryID = (int)$_POST['categoryID'];
+    $itemPrice = (float) $_POST['itemPrice'];
+    $categoryID = (int) $_POST['categoryID'];
     $userID = $_SESSION['user_id'];
 
-    // Get category name from ID
-    $catRes = mysqli_query($conn, "SELECT categoryName FROM Category WHERE categoryID = $categoryID");
+    $catRes = mysqli_query($conn, "SELECT categoryName FROM Category WHERE categoryID=$categoryID");
     $catRow = mysqli_fetch_assoc($catRes);
     $categoryName = $catRow ? $catRow['categoryName'] : '';
 
-    // Generate unique itemID
     $prefix = strtoupper(substr($categoryName, 0, 1));
-    $result = mysqli_query($conn,"SELECT itemID FROM Menu WHERE itemID LIKE '$prefix%' ORDER BY itemID DESC LIMIT 1");
+    $result = mysqli_query($conn, "SELECT itemID FROM Menu WHERE itemID LIKE '$prefix%' ORDER BY itemID DESC LIMIT 1");
     $lastID = 0;
     if ($row = mysqli_fetch_assoc($result)) {
-        $lastID = (int)substr($row['itemID'], 1);
+        $lastID = (int) substr($row['itemID'], 1);
     }
     $newID = $prefix . str_pad($lastID + 1, 3, '0', STR_PAD_LEFT);
 
@@ -41,14 +38,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 // Delete menu item
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete_menu') {
     $itemID = mysqli_real_escape_string($conn, $_POST['itemID']);
-    // Check for references in OrderDetails
-    $check = mysqli_query($conn, "SELECT COUNT(*) as cnt FROM OrderDetails WHERE itemID = '$itemID'");
+
+    $check = mysqli_query($conn, "SELECT COUNT(*) as count FROM OrderDetails WHERE itemID='$itemID'");
     $row = mysqli_fetch_assoc($check);
-    if ($row['cnt'] > 0) {
+    if ($row['count'] > 0) {
         $message = "Cannot delete: This menu item is used in order history!";
         $messageType = "danger";
     } else {
-        $sql = "DELETE FROM Menu WHERE itemID = '$itemID'";
+        $sql = "DELETE FROM Menu WHERE itemID='$itemID'";
         if (mysqli_query($conn, $sql)) {
             $message = "Menu item deleted!";
             $messageType = "success";
@@ -59,20 +56,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 }
 
+//only can view at admin interface for add category or item bzc if view in other type of user needs to invoke and update menu.php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['action'])) {
         switch ($_POST['action']) {
             case 'add_category':
                 $categoryName = mysqli_real_escape_string($conn, trim($_POST['category_name']));
                 $categoryDescription = mysqli_real_escape_string($conn, trim($_POST['category_description']));
-                
+
                 if (!empty($categoryName)) {
-                    // Check if category already exists
-                    $checkSql = "SELECT * FROM Category WHERE categoryName = '$categoryName'";
+                    $checkSql = "SELECT * FROM Category WHERE categoryName='$categoryName'";
                     $checkResult = mysqli_query($conn, $checkSql);
-                    
+
                     if (mysqli_num_rows($checkResult) > 0) {
-                        $message = "Category already exists!";
+                        $message = "Category already exists!!!";
                         $messageType = "danger";
                     } else {
                         $sql = "INSERT INTO Category (categoryName, categoryDescription) VALUES ('$categoryName', '$categoryDescription')";
@@ -89,14 +86,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $messageType = "danger";
                 }
                 break;
-                
+
             case 'update_category':
-                $categoryId = (int)$_POST['category_id'];
+                $categoryId = (int) $_POST['category_id'];
                 $categoryName = mysqli_real_escape_string($conn, trim($_POST['category_name']));
                 $categoryDescription = mysqli_real_escape_string($conn, trim($_POST['category_description']));
-                
+
                 if (!empty($categoryName)) {
-                    $sql = "UPDATE Category SET categoryName = '$categoryName', categoryDescription = '$categoryDescription' WHERE categoryID = $categoryId";
+                    $sql = "UPDATE Category SET categoryName='$categoryName', categoryDescription='$categoryDescription' WHERE categoryID=$categoryId";
                     if (mysqli_query($conn, $sql)) {
                         $message = "Category updated successfully!";
                         $messageType = "success";
@@ -109,20 +106,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $messageType = "danger";
                 }
                 break;
-                
+
             case 'delete_category':
-                $categoryId = (int)$_POST['category_id'];
-                
-                // Check if category has menu items
-                $checkSql = "SELECT COUNT(*) as count FROM Menu WHERE category = (SELECT categoryName FROM Category WHERE categoryID = $categoryId)";
+                $categoryId = (int) $_POST['category_id'];
+
+                $checkSql = "SELECT COUNT(*) as count FROM Menu WHERE category=(SELECT categoryName FROM Category WHERE categoryID=$categoryId)";
                 $checkResult = mysqli_query($conn, $checkSql);
                 $row = mysqli_fetch_assoc($checkResult);
-                
+
                 if ($row['count'] > 0) {
                     $message = "Cannot delete category. There are menu items using this category!";
                     $messageType = "danger";
                 } else {
-                    $sql = "DELETE FROM Category WHERE categoryID = $categoryId";
+                    $sql = "DELETE FROM Category WHERE categoryID=$categoryId";
                     if (mysqli_query($conn, $sql)) {
                         $message = "Category deleted successfully!";
                         $messageType = "success";
@@ -136,16 +132,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// // Fetch all categories
-// $categoriesQuery = "SELECT * FROM Category ORDER BY categoryName";
-// $categoriesResult = mysqli_query($conn, $categoriesQuery);
-// $categories = [];
-// if ($categoriesResult) {
-//     while ($row = mysqli_fetch_assoc($categoriesResult)) {
-//         $categories[] = $row;
-//     }
-// }
-
 $categoriesQuery = "SELECT * FROM Category ORDER BY categoryName";
 $categoriesResult = mysqli_query($conn, $categoriesQuery);
 $categories = [];
@@ -155,10 +141,10 @@ if ($categoriesResult) {
     }
 }
 
-// Fetch menu items grouped by category
+// Fetch items grouped by category
 $menuQuery = "SELECT m.*, c.categoryName as categoryDisplayName 
               FROM Menu m 
-              LEFT JOIN Category c ON m.category = c.categoryName 
+              LEFT JOIN Category c ON m.category=c.categoryName 
               ORDER BY m.category, m.itemName";
 $menuResult = mysqli_query($conn, $menuQuery);
 $menuItems = [];
@@ -172,12 +158,12 @@ if ($menuResult) {
     }
 }
 
-// Update menu item availability (+1 or -1)
+// Update menu item availability (+1 or -1 - only can update one by one )
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_availability') {
     $itemID = mysqli_real_escape_string($conn, $_POST['itemID']);
     $change = $_POST['change'] === 'plus' ? 1 : -1;
-    // Only allow positive availability
-    $sql = "UPDATE Menu SET availability = GREATEST(0, availability + $change) WHERE itemID = '$itemID'";
+
+    $sql = "UPDATE Menu SET availability=GREATEST(0, availability + $change) WHERE itemID='$itemID'";
     if (mysqli_query($conn, $sql)) {
         $message = ($change > 0 ? 'Increased' : 'Decreased') . " quantity!";
         $messageType = "success";
@@ -192,6 +178,7 @@ mysqli_close($conn);
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Admin - Category Management</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -202,24 +189,32 @@ mysqli_close($conn);
 
 <body>
     <!-- Header -->
-    <header class="container-fluid bg-dark fixed-top shadow-sm d-flex justify-content-between align-items-center px-4" style="height: 70px;">
+    <header class="container-fluid bg-dark fixed-top shadow-sm d-flex justify-content-between align-items-center px-4"
+        style="height: 70px;">
         <div class="text-white fs-4 fw-bold">CC Food Ordering System</div>
         <nav class="d-flex align-items-center gap-3 gap-lg-5">
             <a href="mainPage.php" class="text-white text-decoration-none fw-medium position-relative">Home</a>
-            <a href="admin_manage_menu.php" class="text-white text-decoration-none fw-medium position-relative">Manage Menu</a>
-            <a href="admin_sales_report.php" class="text-white text-decoration-none fw-medium position-relative">Sales Report</a>
-            <a href="admin_manage_user.php" class="text-white text-decoration-none fw-medium position-relative">Manage User</a>
-            <a href="admin_feedback.php" class="text-white text-decoration-none fw-medium position-relative">Feedback</a>
+            <a href="admin_manage_menu.php" class="text-white text-decoration-none fw-medium position-relative">Manage
+                Menu</a>
+            <a href="admin_manage_user.php" class="text-white text-decoration-none fw-medium position-relative">Manage
+                User</a>
+            <a href="admin_sales_report.php" class="text-white text-decoration-none fw-medium position-relative">Sales
+                Report</a>
+            <a href="admin_feedback.php"
+                class="text-white text-decoration-none fw-medium position-relative">Feedback</a>
             <div class="dropdown">
-                <a href="#" class="header-link text-white text-decoration-none fw-medium d-flex align-items-center gap-2 dropdown-toggle"
-                   id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <a href="#"
+                    class="header-link text-white text-decoration-none fw-medium d-flex align-items-center gap-2 dropdown-toggle"
+                    id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="assets/user2.png" alt="Profile" class="img-fluid" style="width: 24px; height: 24px;">
                     <span class="d-none d-sm-inline">Profile</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
                     <li><a class="dropdown-item" href="admin_profile.php">My Profile</a></li>
                     <!--li><a class="dropdown-item" href="edit_profile.php">Edit Profile</a></li-->
-                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
                     <li><a class="dropdown-item" href="logout.php">Logout</a></li>
                 </ul>
             </div>
@@ -238,11 +233,11 @@ mysqli_close($conn);
 
         <!-- Alert Messages -->
         <?php if (!empty($message)): ?>
-        <div class="alert alert-<?= $messageType ?> alert-dismissible fade show" role="alert">
-            <i class="fas fa-<?= $messageType === 'success' ? 'check-circle' : 'exclamation-triangle' ?> me-2"></i>
-            <?= $message ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
+            <div class="alert alert-<?= $messageType ?> alert-dismissible fade show" role="alert">
+                <i class="fas fa-<?= $messageType === 'success' ? 'check-circle' : 'exclamation-triangle' ?> me-2"></i>
+                <?= $message ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
         <?php endif; ?>
 
         <!-- Statistics -->
@@ -272,54 +267,59 @@ mysqli_close($conn);
             <div class="p-4">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h4><i class="fas fa-list me-2"></i>Categories</h4>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#addCategoryModal">
                         <i class="fas fa-plus me-2"></i>Add New Category
                     </button>
                 </div>
 
                 <div class="row">
                     <?php foreach ($categories as $category): ?>
-                    <div class="col-md-6 col-lg-4 mb-3">
-                        <div class="category-card p-3">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <h6 class="fw-bold text-primary"><?= htmlspecialchars($category['categoryName']) ?></h6>
-                                <div class="dropdown">
-                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
-                                        <i class="fas fa-ellipsis-v"></i>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li>
-                                            <a class="dropdown-item" href="#" onclick="editCategory(<?= $category['categoryID'] ?>, '<?= htmlspecialchars($category['categoryName']) ?>', '<?= htmlspecialchars($category['categoryDescription']) ?>')">
-                                                <i class="fas fa-edit me-2"></i>Edit
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item text-danger" href="#" onclick="deleteCategory(<?= $category['categoryID'] ?>, '<?= htmlspecialchars($category['categoryName']) ?>')">
-                                                <i class="fas fa-trash me-2"></i>Delete
-                                            </a>
-                                        </li>
-                                    </ul>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="category-card p-3">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h6 class="fw-bold text-primary"><?= htmlspecialchars($category['categoryName']) ?></h6>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                                            data-bs-toggle="dropdown">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <a class="dropdown-item" href="#"
+                                                    onclick="editCategory(<?= $category['categoryID'] ?>, '<?= htmlspecialchars($category['categoryName']) ?>', '<?= htmlspecialchars($category['categoryDescription']) ?>')">
+                                                    <i class="fas fa-edit me-2"></i>Edit
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item text-danger" href="#"
+                                                    onclick="deleteCategory(<?= $category['categoryID'] ?>, '<?= htmlspecialchars($category['categoryName']) ?>')">
+                                                    <i class="fas fa-trash me-2"></i>Delete
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
+                                <p class="text-muted small mb-2">
+                                    <?= htmlspecialchars($category['categoryDescription']) ?: 'No description' ?></p>
+                                <small class="text-success">
+                                    <i class="fas fa-utensils me-1"></i>
+                                    <?php
+                                    $itemCount = isset($menuItems[$category['categoryName']]) ? count($menuItems[$category['categoryName']]) : 0;
+                                    echo $itemCount . ' item' . ($itemCount !== 1 ? 's' : '');
+                                    ?>
+                                </small>
                             </div>
-                            <p class="text-muted small mb-2"><?= htmlspecialchars($category['categoryDescription']) ?: 'No description' ?></p>
-                            <small class="text-success">
-                                <i class="fas fa-utensils me-1"></i>
-                                <?php
-                                $itemCount = isset($menuItems[$category['categoryName']]) ? count($menuItems[$category['categoryName']]) : 0;
-                                echo $itemCount . ' item' . ($itemCount !== 1 ? 's' : '');
-                                ?>
-                            </small>
                         </div>
-                    </div>
                     <?php endforeach; ?>
                 </div>
 
                 <?php if (empty($categories)): ?>
-                <div class="text-center py-5">
-                    <i class="fas fa-tags fa-3x text-muted mb-3"></i>
-                    <h5 class="text-muted">No categories found</h5>
-                    <p class="text-muted">Add your first category to get started</p>
-                </div>
+                    <div class="text-center py-5">
+                        <i class="fas fa-tags fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No categories found</h5>
+                        <p class="text-muted">Add your first category to get started</p>
+                    </div>
                 <?php endif; ?>
             </div>
         </div>
@@ -328,8 +328,7 @@ mysqli_close($conn);
         <div class="admin-container">
             <div class="p-4">
                 <h4 class="mb-4"><i class="fas fa-utensils me-2"></i>Menu Items by Category</h4>
-                
-                <!-- Add Menu Item Form -->
+
                 <form method="POST" class="mb-4">
                     <input type="hidden" name="action" value="add_menu">
                     <div class="row g-2">
@@ -343,7 +342,8 @@ mysqli_close($conn);
                             <select name="categoryID" class="form-control" required>
                                 <option value="">Select Category</option>
                                 <?php foreach ($categories as $cat): ?>
-                                    <option value="<?= $cat['categoryID'] ?>"><?= htmlspecialchars($cat['categoryName']) ?></option>
+                                    <option value="<?= $cat['categoryID'] ?>"><?= htmlspecialchars($cat['categoryName']) ?>
+                                    </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -352,84 +352,92 @@ mysqli_close($conn);
                         </div>
                     </div>
                 </form>
-                
+
                 <?php foreach ($menuItems as $categoryName => $items): ?>
-                <div class="mb-5">
-                    <div class="d-flex align-items-center mb-3">
-                        <h5 class="text-primary mb-0 me-3"><?= htmlspecialchars($categoryName) ?></h5>
-                        <span class="badge bg-secondary badge-category"><?= count($items) ?> item<?= count($items) !== 1 ? 's' : '' ?></span>
-                    </div>
-                    
-                    <div class="table-responsive" >
-                        <table class="table table-hover">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Item ID</th>
-                                    <th>Name</th>
-                                    <th>Price</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($items as $item): ?>
-                                <tr>
-                                    <td><span class="badge bg-info"><?= $item['itemID'] ?></span></td>
-                                    <td class="fw-medium"><?= htmlspecialchars($item['itemName']) ?></td>
-                                    <td>RM<?= number_format($item['itemPrice'], 2) ?></td>
-                                    <td>
-                                        <span class="badge bg-success">Active</span>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-sm btn-outline-info me-1" data-bs-toggle="modal" data-bs-target="#qtyModal_<?= $item['itemID'] ?>">
-                                            <i class="fas fa-eye"></i> View
-                                        </button>
-                                        <!-- Quantity Modal -->
-                                        <div class="modal fade" id="qtyModal_<?= $item['itemID'] ?>" tabindex="-1" aria-labelledby="qtyModalLabel_<?= $item['itemID'] ?>" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="qtyModalLabel_<?= $item['itemID'] ?>">Manage Quantity for <?= htmlspecialchars($item['itemName']) ?></h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body text-center">
-                                                        <span class="badge bg-secondary mb-3" style="font-size:1.2rem;">Current Quantity: <?= $item['availability'] ?></span>
-                                                        <form method="POST" class="d-inline-flex align-items-center justify-content-center gap-2">
-                                                            <input type="hidden" name="action" value="update_availability">
-                                                            <input type="hidden" name="itemID" value="<?= $item['itemID'] ?>">
-                                                            <button type="submit" name="change" value="minus" class="btn btn-outline-warning btn-lg" title="Reduce 1">
-                                                                <i class="fas fa-minus"></i>
-                                                            </button>
-                                                            <button type="submit" name="change" value="plus" class="btn btn-outline-success btn-lg" title="Add 1">
-                                                                <i class="fas fa-plus"></i>
-                                                            </button>
-                                                        </form>
+                    <div class="mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <h5 class="text-primary mb-0 me-3"><?= htmlspecialchars($categoryName) ?></h5>
+                            <span class="badge bg-secondary badge-category"><?= count($items) ?>
+                                item<?= count($items) !== 1 ? 's' : '' ?></span>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Item ID</th>
+                                        <th>Name</th>
+                                        <th>Price</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($items as $item): ?>
+                                        <tr>
+                                            <td><span class="badge bg-info"><?= $item['itemID'] ?></span></td>
+                                            <td class="fw-medium"><?= htmlspecialchars($item['itemName']) ?></td>
+                                            <td>RM<?= number_format($item['itemPrice'], 2) ?></td>
+                                            <td>
+                                                <span class="badge bg-success">Active</span>
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-outline-info me-1"
+                                                    data-bs-toggle="modal" data-bs-target="#qtyModal_<?= $item['itemID'] ?>">
+                                                    <i class="fas fa-eye"></i> View Stock
+                                                </button>
+
+                                                <div class="modal fade" id="qtyModal_<?= $item['itemID'] ?>" tabindex="-1"
+                                                    aria-labelledby="qtyModalLabel_<?= $item['itemID'] ?>" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title"
+                                                                    id="qtyModalLabel_<?= $item['itemID'] ?>">Manage Quantity for <?= htmlspecialchars($item['itemName']) ?></h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                    aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body text-center">
+                                                                <span class="badge bg-secondary mb-3"
+                                                                    style="font-size:1.2rem;">Current Quantity:
+                                                                    <?= $item['availability'] ?></span>
+                                                                <form method="POST" class="d-inline-flex align-items-center justify-content-center gap-2">
+                                                                    <input type="hidden" name="action" value="update_availability">
+                                                                    <input type="hidden" name="itemID" value="<?= $item['itemID'] ?>">
+                                                                    <button type="submit" name="change" value="minus" class="btn btn-outline-warning btn-lg" title="Reduce 1">
+                                                                        <i class="fas fa-minus"></i>
+                                                                    </button>
+                                                                    <button type="submit" name="change" value="plus" class="btn btn-outline-success btn-lg" title="Add 1">
+                                                                        <i class="fas fa-plus"></i>
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <form method="POST" style="display:inline;">
-                                            <input type="hidden" name="action" value="delete_menu">
-                                            <input type="hidden" name="itemID" value="<?= $item['itemID'] ?>">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete <?= htmlspecialchars($item['itemName']) ?>?');">
-                                                <i class="fas fa-trash"></i> Delete
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+                                                <form method="POST" style="display:inline;">
+                                                    <input type="hidden" name="action" value="delete_menu">
+                                                    <input type="hidden" name="itemID" value="<?= $item['itemID'] ?>">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                        onclick="return confirm('Are you sure you want to delete <?= htmlspecialchars($item['itemName']) ?>?');">
+                                                        <i class="fas fa-trash"></i> Delete
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
                 <?php endforeach; ?>
 
                 <?php if (empty($menuItems)): ?>
-                <div class="text-center py-5">
-                    <i class="fas fa-utensils fa-3x text-muted mb-3"></i>
-                    <h5 class="text-muted">No menu items found</h5>
-                    <p class="text-muted">Add some menu items to see them here</p>
-                </div>
+                    <div class="text-center py-5">
+                        <i class="fas fa-utensils fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No menu items found</h5>
+                        <p class="text-muted">Add some menu items to see them here</p>
+                    </div>
                 <?php endif; ?>
             </div>
         </div>
@@ -452,7 +460,8 @@ mysqli_close($conn);
                         </div>
                         <div class="mb-3">
                             <label for="category_description" class="form-label">Description</label>
-                            <textarea class="form-control" id="category_description" name="category_description" rows="3" placeholder="Optional description for this category"></textarea>
+                            <textarea class="form-control" id="category_description" name="category_description"
+                                rows="3" placeholder="Optional description for this category"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -478,11 +487,13 @@ mysqli_close($conn);
                         <input type="hidden" name="category_id" id="edit_category_id">
                         <div class="mb-3">
                             <label for="edit_category_name" class="form-label">Category Name *</label>
-                            <input type="text" class="form-control" id="edit_category_name" name="category_name" required>
+                            <input type="text" class="form-control" id="edit_category_name" name="category_name"
+                                required>
                         </div>
                         <div class="mb-3">
                             <label for="edit_category_description" class="form-label">Description</label>
-                            <textarea class="form-control" id="edit_category_description" name="category_description" rows="3"></textarea>
+                            <textarea class="form-control" id="edit_category_description" name="category_description"
+                                rows="3"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -503,8 +514,10 @@ mysqli_close($conn);
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure you want to delete the category "<span id="delete_category_name" class="fw-bold"></span>"?</p>
-                    <p class="text-muted small">This action cannot be undone. You can only delete categories that have no menu items.</p>
+                    <p>Are you sure you want to delete the category "<span id="delete_category_name"
+                            class="fw-bold"></span>"?</p>
+                    <p class="text-muted small">This action cannot be undone. You can only delete categories that have
+                        no menu items.</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -528,7 +541,7 @@ mysqli_close($conn);
             document.getElementById('edit_category_id').value = id;
             document.getElementById('edit_category_name').value = name;
             document.getElementById('edit_category_description').value = description;
-            
+
             const modal = new bootstrap.Modal(document.getElementById('editCategoryModal'));
             modal.show();
         }
@@ -536,15 +549,15 @@ mysqli_close($conn);
         function deleteCategory(id, name) {
             document.getElementById('delete_category_id').value = id;
             document.getElementById('delete_category_name').textContent = name;
-            
+
             const modal = new bootstrap.Modal(document.getElementById('deleteCategoryModal'));
             modal.show();
         }
 
         // Auto-hide alerts after 5 seconds
-        setTimeout(function() {
+        setTimeout(function () {
             const alerts = document.querySelectorAll('.alert');
-            alerts.forEach(function(alert) {
+            alerts.forEach(function (alert) {
                 const bsAlert = new bootstrap.Alert(alert);
                 bsAlert.close();
             });

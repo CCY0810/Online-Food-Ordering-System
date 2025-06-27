@@ -129,9 +129,12 @@ $isAdmin = (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin')
             <?php if ($isAdmin): ?>
                 <a href="admin_manage_menu.php" class="text-white text-decoration-none fw-medium position-relative">Manage
                     Menu</a>
-                <a href="admin_sales_report.php" class="text-white text-decoration-none fw-medium position-relative">Sales Report</a>
-                <a href="admin_manage_user.php" class="text-white text-decoration-none fw-medium position-relative">Manage User</a>
-                <a href="admin_feedback.php" class="text-white text-decoration-none fw-medium position-relative">Feedback</a>
+                <a href="admin_manage_user.php" class="text-white text-decoration-none fw-medium position-relative">Manage
+                    User</a>
+                <a href="admin_sales_report.php" class="text-white text-decoration-none fw-medium position-relative">Sales
+                    Report</a>
+                <a href="admin_feedback.php"
+                    class="text-white text-decoration-none fw-medium position-relative">Feedback</a>
             <?php else: ?>
                 <a href="menu.php" class="text-white text-decoration-none fw-medium position-relative">Menu</a>
 
@@ -144,43 +147,47 @@ $isAdmin = (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin')
                         <img src="assets/cart1.png" alt="Shopping Cart" class="img-fluid"
                             style="width: 24px; height: 24px;">
 
-                <a href="redirect_orders.php" class="text-white text-decoration-none fw-medium position-relative">Order</a>
-                <div class="d-flex align-items-center gap-4 ms-3">
-                    <a href="cart.php" class="header-link text-white text-decoration-none fw-medium d-flex align-items-center gap-2">
-                        <img src="assets/cart1.png" alt="Shopping Cart" class="img-fluid" style="width: 24px; height: 24px;">
+                        <a href="redirect_orders.php"
+                            class="text-white text-decoration-none fw-medium position-relative">Order</a>
+                        <div class="d-flex align-items-center gap-4 ms-3">
+                            <a href="cart.php"
+                                class="header-link text-white text-decoration-none fw-medium d-flex align-items-center gap-2">
+                                <img src="assets/cart1.png" alt="Shopping Cart" class="img-fluid"
+                                    style="width: 24px; height: 24px;">
 
-                        <span class="d-none d-sm-inline">CART</span>
-                    </a>
-                <?php endif; ?>
-                <div class="dropdown">
-                    <a href="#"
-                        class="header-link text-white text-decoration-none fw-medium d-flex align-items-center gap-2 dropdown-toggle"
-                        id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="assets/user2.png" alt="Profile" class="img-fluid" style="width: 24px; height: 24px;">
-                        <span class="d-none d-sm-inline">Profile</span>
-                    </a>
-                    <?php if (!$isAdmin): ?>
+                                <span class="d-none d-sm-inline">CART</span>
+                            </a>
+                        <?php endif; ?>
+                        <div class="dropdown">
+                            <a href="#"
+                                class="header-link text-white text-decoration-none fw-medium d-flex align-items-center gap-2 dropdown-toggle"
+                                id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="assets/user2.png" alt="Profile" class="img-fluid"
+                                    style="width: 24px; height: 24px;">
+                                <span class="d-none d-sm-inline">Profile</span>
+                            </a>
+                            <?php if (!$isAdmin): ?>
 
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                            <li><a class="dropdown-item" href="profile.php">My Profile</a></li>
-                            <!--li><a class="dropdown-item" href="edit_profile.php">Edit Profile</a></li-->
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="logout.php">Logout</a></li>
-                        </ul>
-                    <?php else: ?>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                            <li><a class="dropdown-item" href="admin_profile.php">My Profile</a></li>
-                            <!--li><a class="dropdown-item" href="edit_profile.php">Edit Profile</a></li-->
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="logout.php">Logout</a></li>
-                        </ul>
-                    <?php endif; ?>
-                </div>
-            </div>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                                    <li><a class="dropdown-item" href="profile.php">My Profile</a></li>
+                                    <!--li><a class="dropdown-item" href="edit_profile.php">Edit Profile</a></li-->
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item" href="logout.php">Logout</a></li>
+                                </ul>
+                            <?php else: ?>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                                    <li><a class="dropdown-item" href="admin_profile.php">My Profile</a></li>
+                                    <!--li><a class="dropdown-item" href="edit_profile.php">Edit Profile</a></li-->
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item" href="logout.php">Logout</a></li>
+                                </ul>
+                            <?php endif; ?>
+                        </div>
+                    </div>
         </nav>
     </header>
 
@@ -197,12 +204,15 @@ $isAdmin = (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin')
                                     <div class="col-12 col-md-6">
                                         <a href="admin_manage_menu.php" class="btn btn-secondary w-100 py-3 mb-2">Manage
                                             Menu</a>
-                                        <a href="admin_sales_report.php" class="btn btn-secondary w-100 py-3 mb-2">View Sales Report</a>
+                                        <a href="admin_sales_report.php" class="btn btn-secondary w-100 py-3 mb-2">View
+                                            Sales Report</a>
                                         <!--a href="#" class="btn btn-secondary w-100 py-3 mb-2">Manage User</a-->
                                     </div>
                                     <div class="col-12 col-md-6">
-                                        <a href="admin_feedback.php" class="btn btn-secondary w-100 py-3 mb-2">View Feedback</a>
-                                        <a href="admin_manage_user.php" class="btn btn-secondary w-100 py-3 mb-2">Manage User</a>
+                                        <a href="admin_manage_user.php" class="btn btn-secondary w-100 py-3 mb-2">Manage
+                                            User</a>
+                                        <a href="admin_feedback.php" class="btn btn-secondary w-100 py-3 mb-2">View
+                                            Feedback</a>
                                     </div>
                                 </div>
                             </div>
