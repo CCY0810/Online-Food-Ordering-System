@@ -138,6 +138,27 @@ $isAdmin = (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin')
             <?php else: ?>
                 <a href="menu.php" class="text-white text-decoration-none fw-medium position-relative">Menu</a>
 
+                <?php if($_SESSION['user_role'] == 'admin' || $_SESSION['user_role'] == 'staff') { ?>
+                    <a href="edit_food_availability.php" class="text-white text-decoration-none fw-medium position-relative">Edit</a>
+                <?php } ?>
+
+                <a href="redirect_orders.php" class="text-white text-decoration-none fw-medium position-relative">Order</a>
+                <div class="d-flex align-items-center gap-4 ms-3">
+                    <a href="cart.php" class="header-link text-white text-decoration-none fw-medium d-flex align-items-center gap-2">
+                        <img src="assets/cart1.png" alt="Shopping Cart" class="img-fluid" style="width: 24px; height: 24px;">
+                        <span class="d-none d-sm-inline">CART</span>
+                    </a>
+                    <div class="dropdown">
+                        <a href="#" class="header-link text-white text-decoration-none fw-medium d-flex align-items-center gap-2 dropdown-toggle"
+                        id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="assets/user2.png" alt="Profile" class="img-fluid" style="width: 24px; height: 24px;">
+                        <span class="d-none d-sm-inline">Profile</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                        <li><a class="dropdown-item" href="profile.php">My Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="logout.php">Logout</a></li>
+                    </ul>
                 <a href="order.php" class="text-white text-decoration-none fw-medium position-relative">Order</a>
             <?php endif; ?>
             <div class="d-flex align-items-center gap-4 ms-3">

@@ -124,6 +124,15 @@ $profileImage = htmlspecialchars($user['profileImage']);
             <nav class="d-flex align-items-center gap-3 gap-lg-5">
                 <a href="mainPage.php" class="text-white text-decoration-none fw-medium position-relative">Home</a>
                 <a href="menu.php" class="text-white text-decoration-none fw-medium position-relative">Menu</a>
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+                <?php if($_SESSION['user_role'] == 'admin' || $_SESSION['user_role'] == 'staff') { ?>
+                    <a href="edit_food_availability.php" class="text-white text-decoration-none fw-medium position-relative">Edit</a>
+                <?php } ?>
+=======
+>>>>>>> 35abe96a4753a42711900242db63415d473b6e8d
+>>>>>>> Stashed changes
                 <a href="redirect_orders.php" class="text-white text-decoration-none fw-medium position-relative">Order</a>
                 <div class="d-flex align-items-center gap-4 ms-3">
                     <a href="cart.php" class="header-link text-white text-decoration-none fw-medium d-flex align-items-center gap-2">

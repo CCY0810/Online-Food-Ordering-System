@@ -67,7 +67,7 @@ try {
             throw new Exception("Error adding order details: " . mysqli_error($conn));
         }
     }
-
+    
     // Step 4: Clear the cart
     $clearCart = "DELETE FROM Cart WHERE userID = '$userID'";
     if (!mysqli_query($conn, $clearCart)) {

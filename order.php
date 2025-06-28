@@ -8,6 +8,9 @@ if (!isset($_SESSION['user_id'])) {
 
 require_once("config.php");
 
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 // Fetch orders from database
 $userID = $_SESSION['user_id'];
 $orders = [];
@@ -59,8 +62,12 @@ while ($orderRow = $result->fetch_assoc()) {
     ];
 }
 
-$stmt->close();
-$conn->close();
+// Fetch notifications for this order
+$notifStmt = $conn->prepare("SELECT message, createdAt FROM OrderNotifications WHERE orderID = ? ORDER BY createdAt DESC");
+$notifStmt->bind_param("i", $order['dbOrderID']);
+$notifStmt->execute();
+$notifResult = $notifStmt->get_result();
+
 ?>
 
 <!DOCTYPE html>
@@ -71,6 +78,16 @@ $conn->close();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="order.css">
+    <style>
+        .alert-info {
+            background-color: #e7f3fe;
+            border-color: #b3d7ff;
+            color: #31708f;
+            border-radius: 10px;
+            padding: 10px 15px;
+        }
+
+    </style>
 </head>
 <body class="d-flex flex-column min-vh-100 bg-light">
     <!-- Header -->
@@ -79,6 +96,15 @@ $conn->close();
         <nav class="d-flex align-items-center gap-3 gap-lg-5">
             <a href="mainPage.php" class="text-white text-decoration-none fw-medium position-relative">Home</a>
             <a href="menu.php" class="text-white text-decoration-none fw-medium position-relative">Menu</a>
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+            <?php if($_SESSION['user_role'] == 'admin' || $_SESSION['user_role'] == 'staff') { ?>
+                    <a href="edit_food_availability.php" class="text-white text-decoration-none fw-medium position-relative">Edit</a>
+            <?php } ?>
+=======
+>>>>>>> 35abe96a4753a42711900242db63415d473b6e8d
+>>>>>>> Stashed changes
             <a href="redirect_orders.php" class="text-white text-decoration-none fw-medium position-relative">Order</a>
             <div class="d-flex align-items-center gap-4 ms-3">
                 <a href="cart.php" class="header-link text-white text-decoration-none fw-medium d-flex align-items-center gap-2">
@@ -134,7 +160,7 @@ $conn->close();
                                         case 'Accepted':
                                             $statusClass = 'status-accepted';
                                             break;
-                                        case 'In Preparation':
+                                        case 'Preparing':
                                             $statusClass = 'status-inpreparation';
                                             break;
                                     }
@@ -144,6 +170,26 @@ $conn->close();
                                     </span>
                                 </div>
                             </div>
+
+                           <?php if (isset($order['dbOrderID'])): ?>
+                                <?php
+                                $notifStmt = $conn->prepare("SELECT message, createdAt FROM OrderNotifications WHERE orderID = ? ORDER BY createdAt DESC");
+                                $notifStmt->bind_param("i", $order['dbOrderID']);
+                                $notifStmt->execute();
+                                $notifResult = $notifStmt->get_result();
+
+                                if ($notifResult && $notifResult->num_rows > 0): ?>
+                                    <div class="alert alert-info mt-2 mb-3">
+                                        <strong>📢 Message from staff:</strong>
+                                        <ul class="mb-0">
+                                            <?php while ($notif = $notifResult->fetch_assoc()): ?>
+                                                <li><em><?= htmlspecialchars($notif['createdAt']) ?></em>: <?= htmlspecialchars($notif['message']) ?></li>
+                                            <?php endwhile; ?>
+                                        </ul>
+                                    </div>
+                                <?php endif; ?>
+                            <?php endif; ?>
+
                             
                             <div class="order-body">
                                 <div class="order-detail">
