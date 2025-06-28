@@ -138,30 +138,45 @@ mysqli_close($conn);
         </style>
     </head>
     <body class="d-flex flex-column min-vh-100 bg-light">
-        <header class="container-fluid bg-dark fixed-top shadow-sm d-flex justify-content-between align-items-center px-4" style="height: 70px;">
+        <header class="container-fluid bg-dark fixed-top shadow-sm d-flex justify-content-between align-items-center px-4"
+            style="height: 70px;">
             <div class="text-white fs-4 fw-bold">CC Food Ordering System</div>
             <nav class="d-flex align-items-center gap-3 gap-lg-5">
                 <a href="mainPage.php" class="text-white text-decoration-none fw-medium position-relative">Home</a>
-                <a href="menu.php" class="text-white text-decoration-none fw-medium position-relative">Menu</a>
-                <a href="redirect_orders.php" class="text-white text-decoration-none fw-medium position-relative">Order</a>
-                <div class="d-flex align-items-center gap-4 ms-3">
-                    <a href="cart.php" class="header-link text-white text-decoration-none fw-medium d-flex align-items-center gap-2">
-                        <img src="assets/cart1.png" alt="Shopping Cart" class="img-fluid" style="width: 24px; height: 24px;">
-                        <span class="d-none d-sm-inline">CART</span>
-                    </a>
-                    <div class="dropdown">
-                        <a href="#" class="header-link text-white text-decoration-none fw-medium d-flex align-items-center gap-2 dropdown-toggle"
-                        id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="assets/user2.png" alt="Profile" class="img-fluid" style="width: 24px; height: 24px;">
-                        <span class="d-none d-sm-inline">Profile</span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                        <li><a class="dropdown-item" href="profile.php">My Profile</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="logout.php">Logout</a></li>
-                    </ul>
+                <?php if($_SESSION['user_role'] == 'admin' || $_SESSION['user_role'] == 'staff') { ?>
+                    <a href="admin_manage_menu.php" class="text-white text-decoration-none fw-medium position-relative">Manage
+                        Menu</a>
+                <?php } ?>
+                <?php if ($isAdmin): ?>
+                    <a href="admin_manage_user.php" class="text-white text-decoration-none fw-medium position-relative">Manage
+                        User</a>
+                    <a href="admin_sales_report.php" class="text-white text-decoration-none fw-medium position-relative">Sales
+                        Report</a>
+                    <a href="admin_feedback.php"
+                        class="text-white text-decoration-none fw-medium position-relative">Feedback</a>
+                <?php endif; ?>
+                <?php if (!$isAdmin): ?>
+                    <a href="menu.php" class="text-white text-decoration-none fw-medium position-relative">Menu</a>    
+                    <a href="redirect_orders.php" class="text-white text-decoration-none fw-medium position-relative">Order</a>
+                    <div class="d-flex align-items-center gap-4 ms-3">
+                        <a href="cart.php" class="header-link text-white text-decoration-none fw-medium d-flex align-items-center gap-2">
+                            <img src="assets/cart1.png" alt="Shopping Cart" class="img-fluid" style="width: 24px; height: 24px;">
+                            <span class="d-none d-sm-inline">CART</span>
+                        </a>
+                <?php endif; ?>
+                        <div class="dropdown">
+                            <a href="#" class="header-link text-white text-decoration-none fw-medium d-flex align-items-center gap-2 dropdown-toggle"
+                            id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="assets/user2.png" alt="Profile" class="img-fluid" style="width: 24px; height: 24px;">
+                                <span class="d-none d-sm-inline">Profile</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                                <li><a class="dropdown-item" href="profile.php">My Profile</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="logout.php">Logout</a></li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
             </nav>
         </header>
         

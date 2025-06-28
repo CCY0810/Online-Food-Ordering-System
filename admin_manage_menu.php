@@ -1,6 +1,16 @@
 <?php
 session_start();
 
+if(!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+if($_SESSION['user_role'] != 'admin' && $_SESSION['user_role'] != 'staff') {
+    header("Location: mainPage.php");
+    exit();
+}
+
 require_once("config.php");
 
 $message = '';
@@ -161,14 +171,13 @@ if ($menuResult) {
 // Update menu item availability (+1 or -1 - only can update one by one )
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_availability') {
     $itemID = mysqli_real_escape_string($conn, $_POST['itemID']);
-    $change = $_POST['change'] === 'plus' ? 1 : -1;
-
-    $sql = "UPDATE Menu SET availability=GREATEST(0, availability + $change) WHERE itemID='$itemID'";
+    $availability = (int) $_POST['availability'];
+    
+    $sql = "UPDATE Menu SET availability='$availability' WHERE itemID='$itemID'";
     if (mysqli_query($conn, $sql)) {
-        $message = ($change > 0 ? 'Increased' : 'Decreased') . " quantity!";
-        $messageType = "success";
+        header("Location: admin_manage_menu.php?updated=success");
     } else {
-        $message = "Error: " . mysqli_error($conn);
+        $message = "Error updating availability: " . mysqli_error($conn);
         $messageType = "danger";
     }
 }
@@ -194,30 +203,40 @@ mysqli_close($conn);
         <div class="text-white fs-4 fw-bold">CC Food Ordering System</div>
         <nav class="d-flex align-items-center gap-3 gap-lg-5">
             <a href="mainPage.php" class="text-white text-decoration-none fw-medium position-relative">Home</a>
-            <a href="admin_manage_menu.php" class="text-white text-decoration-none fw-medium position-relative">Manage
-                Menu</a>
-            <a href="admin_manage_user.php" class="text-white text-decoration-none fw-medium position-relative">Manage
-                User</a>
-            <a href="admin_sales_report.php" class="text-white text-decoration-none fw-medium position-relative">Sales
-                Report</a>
-            <a href="admin_feedback.php"
-                class="text-white text-decoration-none fw-medium position-relative">Feedback</a>
-            <div class="dropdown">
-                <a href="#"
-                    class="header-link text-white text-decoration-none fw-medium d-flex align-items-center gap-2 dropdown-toggle"
-                    id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="assets/user2.png" alt="Profile" class="img-fluid" style="width: 24px; height: 24px;">
-                    <span class="d-none d-sm-inline">Profile</span>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                    <li><a class="dropdown-item" href="admin_profile.php">My Profile</a></li>
-                    <!--li><a class="dropdown-item" href="edit_profile.php">Edit Profile</a></li-->
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item" href="logout.php">Logout</a></li>
-                </ul>
-            </div>
+            <?php if($_SESSION['user_role'] == 'admin' || $_SESSION['user_role'] == 'staff') { ?>
+                <a href="admin_manage_menu.php" class="text-white text-decoration-none fw-medium position-relative">Manage
+                    Menu</a>
+            <?php } ?>
+            <?php if ($isAdmin): ?>
+                <a href="admin_manage_user.php" class="text-white text-decoration-none fw-medium position-relative">Manage
+                    User</a>
+                <a href="admin_sales_report.php" class="text-white text-decoration-none fw-medium position-relative">Sales
+                    Report</a>
+                <a href="admin_feedback.php"
+                    class="text-white text-decoration-none fw-medium position-relative">Feedback</a>
+            <?php endif; ?>
+            <?php if (!$isAdmin): ?>
+                <a href="menu.php" class="text-white text-decoration-none fw-medium position-relative">Menu</a>    
+                <a href="redirect_orders.php" class="text-white text-decoration-none fw-medium position-relative">Order</a>
+                <div class="d-flex align-items-center gap-4 ms-3">
+                    <a href="cart.php" class="header-link text-white text-decoration-none fw-medium d-flex align-items-center gap-2">
+                        <img src="assets/cart1.png" alt="Shopping Cart" class="img-fluid" style="width: 24px; height: 24px;">
+                        <span class="d-none d-sm-inline">CART</span>
+                    </a>
+            <?php endif; ?>
+                    <div class="dropdown">
+                        <a href="#" class="header-link text-white text-decoration-none fw-medium d-flex align-items-center gap-2 dropdown-toggle"
+                        id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="assets/user2.png" alt="Profile" class="img-fluid" style="width: 24px; height: 24px;">
+                            <span class="d-none d-sm-inline">Profile</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                            <li><a class="dropdown-item" href="profile.php">My Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="logout.php">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
         </nav>
     </header>
 
@@ -400,16 +419,12 @@ mysqli_close($conn);
                                                             <div class="modal-body text-center">
                                                                 <span class="badge bg-secondary mb-3"
                                                                     style="font-size:1.2rem;">Current Quantity:
-                                                                    <?= $item['availability'] ?></span>
+                                                                </span>
                                                                 <form method="POST" class="d-inline-flex align-items-center justify-content-center gap-2">
                                                                     <input type="hidden" name="action" value="update_availability">
                                                                     <input type="hidden" name="itemID" value="<?= $item['itemID'] ?>">
-                                                                    <button type="submit" name="change" value="minus" class="btn btn-outline-warning btn-lg" title="Reduce 1">
-                                                                        <i class="fas fa-minus"></i>
-                                                                    </button>
-                                                                    <button type="submit" name="change" value="plus" class="btn btn-outline-success btn-lg" title="Add 1">
-                                                                        <i class="fas fa-plus"></i>
-                                                                    </button>
+                                                                    <input type="number" name="availability" value="<?= $item['availability'] ?>" class="form-control" min="0" required>
+                                                                    <button type="submit" class="btn btn-primary">Update</button>
                                                                 </form>
                                                             </div>
                                                         </div>

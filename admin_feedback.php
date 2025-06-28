@@ -1,6 +1,16 @@
 <?php
 session_start();
 
+if(!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+if($_SESSION['user_role'] != 'admin') {
+    header("Location: mainPage.php");
+    exit();
+}
+
 require_once("config.php");
 
 if ($_POST && isset($_POST['action']) && $_POST['action'] === 'update_status') {

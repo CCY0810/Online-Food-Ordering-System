@@ -1,6 +1,16 @@
 <?php
 session_start();
 
+if(!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+if($_SESSION['user_role'] != 'admin') {
+    header("Location: mainPage.php");
+    exit();
+}
+
 require_once("config.php");
 
 $message = "";
