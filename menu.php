@@ -328,15 +328,6 @@ $imageMap = [
             <nav class="d-flex align-items-center gap-3 gap-lg-5">
                 <a href="mainPage.php" class="text-white text-decoration-none fw-medium position-relative">Home</a>
                 <a href="menu.php" class="text-white text-decoration-none fw-medium position-relative">Menu</a>
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-                <?php if($_SESSION['user_role'] == 'admin' || $_SESSION['user_role'] == 'staff') { ?>
-                    <a href="edit_food_availability.php" class="text-white text-decoration-none fw-medium position-relative">Edit</a>
-                <?php } ?>
-=======
->>>>>>> 35abe96a4753a42711900242db63415d473b6e8d
->>>>>>> Stashed changes
                 <a href="redirect_orders.php" class="text-white text-decoration-none fw-medium position-relative">Order</a>
                 <div class="d-flex align-items-center gap-4 ms-3">
                     <a href="cart.php" class="header-link text-white text-decoration-none fw-medium d-flex align-items-center gap-2">
@@ -374,14 +365,7 @@ $imageMap = [
                 </div>
             </div>
         </div>
-<<<<<<< HEAD
-        
-=======
 
-<<<<<<< Updated upstream
-=======
->>>>>>> 35abe96a4753a42711900242db63415d473b6e8d
->>>>>>> Stashed changes
         <?php 
             if (isset($_GET['search']) && !empty($_GET['search'])) {
                 ?>
@@ -407,22 +391,6 @@ $imageMap = [
                             </div>
                             <?php endforeach; ?>
                         </div>
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-                    </div>
-                </div>
-                <?php
-            } else {
-                ?>
-                <!-- Food Menu Section -->
-                <div class="menu-category py-5" id="food">
-                    <div class="container">
-                        <h2 class="category-title text-center">Food</h2>
-                        <div class="row menu-items-row">
-                            <?php foreach ($foodItems as $item): ?>
-=======
->>>>>>> Stashed changes
                     </div>
                 </div>
                 <?php
@@ -460,10 +428,6 @@ $imageMap = [
                         <h2 class="category-title text-center">Beverages</h2>
                         <div class="row menu-items-row">
                             <?php foreach ($beverageItems as $item): ?>
-<<<<<<< Updated upstream
-=======
->>>>>>> 35abe96a4753a42711900242db63415d473b6e8d
->>>>>>> Stashed changes
                             <div class="col-12 col-md-6 col-lg-4 menu-item-col">
                                 <a href="menu_detail.php?itemID=<?= $item['itemID'] ?>" class="menu-item-link">
                                     <div class="menu-item w-100">
@@ -482,38 +446,6 @@ $imageMap = [
                             <?php endforeach; ?>
                         </div>
                     </div>
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-                </div>
-
-                <!-- Beverages Menu Section -->
-                <div class="menu-category py-5 bg-light" id="beverage">
-                    <div class="container">
-                        <h2 class="category-title text-center">Beverages</h2>
-                        <div class="row menu-items-row">
-                            <?php foreach ($beverageItems as $item): ?>
-                            <div class="col-12 col-md-6 col-lg-4 menu-item-col">
-                                <a href="menu_detail.php?itemID=<?= $item['itemID'] ?>" class="menu-item-link">
-                                    <div class="menu-item w-100">
-                                        <div class="item-image-container">
-                                            <img src="assets/<?= $imageMap[$item['itemName']] ?>" 
-                                                alt="<?= $item['itemName'] ?>" 
-                                                class="item-image">
-                                        </div>
-                                        <div class="item-details">
-                                            <h3 class="item-name"><?= $item['itemName'] ?></h3>
-                                            <p class="item-price">RM<?= number_format($item['itemPrice'], 2) ?></p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-=======
->>>>>>> 35abe96a4753a42711900242db63415d473b6e8d
->>>>>>> Stashed changes
                 </div>  
                 <?php 
             } 
