@@ -98,8 +98,10 @@ This project was developed for **academic purposes at Universiti Teknologi Malay
 
 # 🖥 System Preview
 
-![Main Interface](images/homepage.png)
-![Editing Example](images/image_editing_control_panel.png)
+![Home Page](images/homePage.png)
+![Menu Page](images/menu.png)
+![Cart Page](images/cart.png)
+![Admin Dashboard](images/admin.png)
 
 ---
 
